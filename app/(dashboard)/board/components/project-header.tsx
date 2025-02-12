@@ -2,16 +2,25 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Edit2 } from "lucide-react";
+import { ChevronDown, Edit2, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 interface ProjectHeaderProps {
 	title: string;
 	description?: string;
 	onTitleChange?: (title: string) => void;
 	onDescriptionChange?: (description: string) => void;
+	onAddTask?: (task: { title: string; description: string }) => void;
 }
 
 export default function ProjectHeader({
@@ -19,11 +28,15 @@ export default function ProjectHeader({
 	description: initialDescription = "Click to add a description",
 	onTitleChange,
 	onDescriptionChange,
+	onAddTask,
 }: ProjectHeaderProps) {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 	const [title, setTitle] = useState(initialTitle);
 	const [description, setDescription] = useState(initialDescription);
+	const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
+	const [newTaskTitle, setNewTaskTitle] = useState("");
+	const [newTaskDescription, setNewTaskDescription] = useState("");
 
 	const handleTitleChange = (newTitle: string) => {
 		setTitle(newTitle);
@@ -37,6 +50,18 @@ export default function ProjectHeader({
 
 	const handleEditComplete = () => {
 		setIsEditing(false);
+	};
+
+	const handleAddTask = () => {
+		if (newTaskTitle.trim()) {
+			onAddTask?.({
+				title: newTaskTitle,
+				description: newTaskDescription,
+			});
+			setNewTaskTitle("");
+			setNewTaskDescription("");
+			setIsAddTaskModalOpen(false);
+		}
 	};
 
 	return (
@@ -88,6 +113,62 @@ export default function ProjectHeader({
 						</div>
 					)}
 				</div>
+				<Dialog
+					open={isAddTaskModalOpen}
+					onOpenChange={setIsAddTaskModalOpen}
+				>
+					<DialogTrigger asChild>
+						<Button
+							variant="outline"
+							size="sm"
+							className="shrink-0"
+						>
+							<Plus className="h-4 w-4 mr-2" /> Add Task
+						</Button>
+					</DialogTrigger>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Add New Task</DialogTitle>
+						</DialogHeader>
+						<div className="grid gap-4 py-4">
+							<div className="grid grid-cols-4 items-center gap-4">
+								<Label
+									htmlFor="task-title"
+									className="text-right"
+								>
+									Title
+								</Label>
+								<Input
+									id="task-title"
+									value={newTaskTitle}
+									onChange={(e) =>
+										setNewTaskTitle(e.target.value)
+									}
+									className="col-span-3"
+								/>
+							</div>
+							<div className="grid grid-cols-4 items-center gap-4">
+								<Label
+									htmlFor="task-description"
+									className="text-right"
+								>
+									Description
+								</Label>
+								<Textarea
+									id="task-description"
+									value={newTaskDescription}
+									onChange={(e) =>
+										setNewTaskDescription(e.target.value)
+									}
+									className="col-span-3"
+								/>
+							</div>
+						</div>
+						<div className="flex justify-end">
+							<Button onClick={handleAddTask}>Add Task</Button>
+						</div>
+					</DialogContent>
+				</Dialog>
 			</div>
 			{isExpanded && (
 				<div className="mt-4 max-w-2xl transition-all duration-200 ease-in-out">

@@ -1,10 +1,9 @@
 "use client";
-import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { ChevronDown, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
 import { format } from "timeago.js";
 
 interface Task {
@@ -20,7 +19,6 @@ interface Props {
 }
 
 export default function KanbanTask({ task }: Props) {
-	const [isExpanded, setIsExpanded] = useState(false);
 	const {
 		attributes,
 		listeners,
@@ -57,31 +55,16 @@ export default function KanbanTask({ task }: Props) {
 			<CardContent className="p-3">
 				<div className="flex items-center justify-between gap-2">
 					<span className="text-sm">{task.title}</span>
-					<button
-						onClick={(e) => {
-							e.preventDefault();
-							e.stopPropagation();
-							setIsExpanded(!isExpanded);
-						}}
-						className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 hover:bg-accent rounded-sm"
-					>
-						<ChevronDown
-							className={cn(
-								"h-4 w-4 text-muted-foreground transition-transform duration-200",
-								isExpanded && "rotate-180"
-							)}
-						/>
-					</button>
+					{task.description && (
+						<span className="text-xs text-muted-foreground truncate max-w-[120px]">
+							{task.description}
+						</span>
+					)}
 				</div>
 				<div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
 					<Clock className="h-3 w-3" />
 					<span>{format(task.createdAt)}</span>
 				</div>
-				{isExpanded && task.description && (
-					<div className="mt-2 pt-2 text-xs text-muted-foreground border-t">
-						{task.description}
-					</div>
-				)}
 			</CardContent>
 		</Card>
 	);
