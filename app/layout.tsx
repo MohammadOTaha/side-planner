@@ -1,35 +1,41 @@
-import './globals.css';
-import type { Metadata, Viewport } from 'next';
-import { Manrope } from 'next/font/google';
-import { UserProvider } from '@/lib/auth';
-import { getUser } from '@/lib/db/queries';
+import "./globals.css";
+import type { Metadata, Viewport } from "next";
+import { UserProvider } from "@/lib/auth";
+import { getUser } from "@/lib/db/queries";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
 export const metadata: Metadata = {
-  title: 'Next.js SaaS Starter',
-  description: 'Get started quickly with Next.js, Postgres, and Stripe.',
+	title: "Next.js SaaS Starter",
+	description: "Get started quickly with Next.js, Postgres, and Stripe.",
 };
 
 export const viewport: Viewport = {
-  maximumScale: 1,
+	maximumScale: 1,
 };
 
-const manrope = Manrope({ subsets: ['latin'] });
-
 export default function RootLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  let userPromise = getUser();
+	let userPromise = getUser();
 
-  return (
-    <html
-      lang="en"
-      className={`bg-white dark:bg-gray-950 text-black dark:text-white ${manrope.className}`}
-    >
-      <body className="min-h-[100dvh] bg-gray-50">
-        <UserProvider userPromise={userPromise}>{children}</UserProvider>
-      </body>
-    </html>
-  );
+	return (
+		<html lang="en" suppressHydrationWarning>
+			<body className="min-h-screen bg-background font-sans antialiased">
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					<UserProvider userPromise={userPromise}>
+						<main className="relative flex min-h-screen flex-col">
+							{children}
+						</main>
+					</UserProvider>
+				</ThemeProvider>
+			</body>
+		</html>
+	);
 }
