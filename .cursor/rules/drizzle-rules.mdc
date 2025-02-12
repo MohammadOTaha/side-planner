@@ -1,0 +1,23 @@
+---
+description: Drizzle ORM Rules
+globs: 
+---
+# Drizzle Best Practices
+
+-   Keep schema definitions in separate files
+-   Use migrations instead of push for schema changes
+-   Implement proper relations between tables
+-   Use prepared statements for queries
+-   Keep database logic in separate service files
+-   Example schema structure:
+```tsx
+import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+
+export const tasks = pgTable('tasks', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  description: text('description'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+```

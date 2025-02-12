@@ -1,0 +1,10 @@
+---
+description: Testing Rules
+globs: 
+---
+# Testing Guidelines
+
+-   Write unit tests for utilities
+-   Implement E2E tests for critical paths
+-   Use proper mocking strategies
+-   Implement proper test coverage

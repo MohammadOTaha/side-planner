@@ -1,0 +1,15 @@
+---
+description: NextJS 15 Rules
+globs: *
+---
+# Next.js 15 Rules
+
+-   Use Server Components by default, only use 'use client' when necessary
+-   Implement route handlers in app/api directory using Route Handlers API
+-   Use Next.js's built-in SEO features with metadata objects
+-   Leverage Server Actions for form submissions and data mutations
+-   Use generateMetadata for dynamic metadata
+-   Implement proper error handling with error.tsx files
+-   Use loading.tsx for streaming and suspense
+-   Use Next.js Image component for all images
+-   Implement proper caching strategies using fetch cache options

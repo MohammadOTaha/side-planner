@@ -1,0 +1,27 @@
+---
+description: TailwindCSS Rules
+globs: 
+---
+# Tailwind CSS Rules
+
+-   Use consistent spacing with Tailwind's built-in spacing scale
+-   Create custom color variables in tailwind.config.ts
+-   Use @layer components for repeated class combinations
+-   Maintain mobile-first approach with responsive classes
+-   Use container queries when appropriate
+-   Avoid inline styles completely
+-   Use Tailwind's built-in dark mode classes
+-   Group related utility classes logically:
+
+```tsx
+className={`
+  /* Layout */
+  flex items-center justify-between
+  /* Spacing */
+  p-4 gap-2
+  /* Visual */
+  bg-background rounded-lg
+  /* Interactive */
+  hover:bg-muted
+`}
+```
