@@ -12,6 +12,7 @@ import {
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import KanbanColumn from "@/app/(dashboard)/board/components/kanban-column";
 import { Card } from "@/components/ui/card";
+import ProjectHeader from "@/app/(dashboard)/board/components/project-header";
 
 interface Task {
 	id: string;
@@ -211,7 +212,10 @@ export default function BoardPage() {
 
 	return (
 		<div className="p-6 max-w-[1600px] mx-auto">
-			<h1 className="text-2xl font-semibold mb-6">Kanban Board</h1>
+			<ProjectHeader
+				title="Kanban Board"
+				description="A drag-and-drop kanban board for managing tasks and projects."
+			/>
 
 			<DndContext
 				sensors={sensors}
