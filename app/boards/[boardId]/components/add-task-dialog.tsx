@@ -12,7 +12,15 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Plus, Sparkles, Check } from "lucide-react";
+import {
+	Plus,
+	Sparkles,
+	Check,
+	ArrowDown,
+	ArrowRight,
+	ArrowUp,
+	DotIcon,
+} from "lucide-react";
 import { type Board } from "@/lib/db/schema";
 import {
 	createTaskAction,
@@ -54,6 +62,7 @@ export default function AddTaskDialog({
 	const [selectedTasks, setSelectedTasks] = useState<Set<number>>(new Set());
 	const [isAiMode, setIsAiMode] = useState(false);
 	const [complexity, setComplexity] = useState("medium");
+	const [priority, setPriority] = useState("medium");
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -69,6 +78,7 @@ export default function AddTaskDialog({
 						boardId: board.id,
 						status: "backlog",
 						complexity: task.complexity.toLowerCase(),
+						priority,
 					});
 				}
 			} else {
@@ -77,6 +87,7 @@ export default function AddTaskDialog({
 					boardId: board.id,
 					status: "backlog",
 					complexity,
+					priority,
 				});
 			}
 
@@ -129,7 +140,7 @@ export default function AddTaskDialog({
 					Add Task
 				</Button>
 			</DialogTrigger>
-			<DialogContent className="sm:max-w-[600px]">
+			<DialogContent className="sm:max-w-[600px] border border-gray-800">
 				<form onSubmit={handleSubmit}>
 					<DialogHeader>
 						<DialogTitle>Create Task</DialogTitle>
@@ -148,29 +159,73 @@ export default function AddTaskDialog({
 									onChange={(e) => setTitle(e.target.value)}
 									placeholder="What do you want to get done?"
 								/>
-								<div>
-									<Label htmlFor="complexity">
-										Complexity
-									</Label>
-									<Select
-										value={complexity}
-										onValueChange={setComplexity}
-									>
-										<SelectTrigger id="complexity">
-											<SelectValue placeholder="Select complexity" />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value="easy">
-												Easy
-											</SelectItem>
-											<SelectItem value="medium">
-												Medium
-											</SelectItem>
-											<SelectItem value="hard">
-												Hard
-											</SelectItem>
-										</SelectContent>
-									</Select>
+								<div className="grid grid-cols-2 gap-4">
+									<div>
+										<Label htmlFor="complexity">
+											Complexity
+										</Label>
+										<Select
+											value={complexity}
+											onValueChange={setComplexity}
+										>
+											<SelectTrigger id="complexity">
+												<SelectValue placeholder="Select complexity" />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectItem value="easy">
+													<div className="flex items-center">
+														<DotIcon className="w-4 h-4 mr-2 text-green-500" />
+														Easy
+													</div>
+												</SelectItem>
+												<SelectItem value="medium">
+													<div className="flex items-center">
+														<DotIcon className="w-4 h-4 mr-2 text-yellow-500" />
+														Medium
+													</div>
+												</SelectItem>
+												<SelectItem value="hard">
+													<div className="flex items-center">
+														<DotIcon className="w-4 h-4 mr-2 text-red-500" />
+														Hard
+													</div>
+												</SelectItem>
+											</SelectContent>
+										</Select>
+									</div>
+									<div>
+										<Label htmlFor="priority">
+											Priority
+										</Label>
+										<Select
+											value={priority}
+											onValueChange={setPriority}
+										>
+											<SelectTrigger id="priority">
+												<SelectValue placeholder="Select priority" />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectItem value="low">
+													<div className="flex items-center">
+														<ArrowDown className="w-4 h-4 mr-2 text-blue-500" />
+														Low
+													</div>
+												</SelectItem>
+												<SelectItem value="medium">
+													<div className="flex items-center">
+														<ArrowRight className="w-4 h-4 mr-2 text-yellow-500" />
+														Medium
+													</div>
+												</SelectItem>
+												<SelectItem value="high">
+													<div className="flex items-center">
+														<ArrowUp className="w-4 h-4 mr-2 text-red-500" />
+														High
+													</div>
+												</SelectItem>
+											</SelectContent>
+										</Select>
+									</div>
 								</div>
 							</div>
 						) : (

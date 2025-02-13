@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { type Task } from "@/lib/db/schema";
 import { format } from "timeago.js";
+import { ArrowDown, ArrowRight, ArrowUp } from "lucide-react";
 
 interface KanbanTask extends Omit<Task, "id"> {
 	id: string; // For DnD we need string IDs
@@ -32,6 +33,19 @@ export default function KanbanTask({ task }: Props) {
 		transition,
 	};
 
+	const getPriorityIcon = (priority: string) => {
+		switch (priority) {
+			case "low":
+				return <ArrowDown className="h-4 w-4 text-blue-500" />;
+			case "medium":
+				return <ArrowRight className="h-4 w-4 text-yellow-500" />;
+			case "high":
+				return <ArrowUp className="h-4 w-4 text-red-500" />;
+			default:
+				return <ArrowRight className="h-4 w-4 text-yellow-500" />;
+		}
+	};
+
 	return (
 		<Card
 			ref={setNodeRef}
@@ -44,7 +58,12 @@ export default function KanbanTask({ task }: Props) {
 			{...listeners}
 		>
 			<div className="flex-1">
-				<p className="text-sm font-medium break-words">{task.title}</p>
+				<div className="flex items-center gap-2 mb-2">
+					{getPriorityIcon(task.priority)}
+					<p className="text-sm font-medium break-words">
+						{task.title}
+					</p>
+				</div>
 			</div>
 			<div className="flex justify-end items-center gap-2 mt-2">
 				<span className="text-xs text-muted-foreground">
