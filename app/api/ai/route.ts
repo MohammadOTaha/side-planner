@@ -23,7 +23,6 @@ export async function POST(req: Request) {
         - Provide a clear, specific title
         - Add a brief description
         - Estimate complexity (Low/Medium/High)
-        - Identify any dependencies
         - Note any technical considerations
         4. Order subtasks in a logical sequence of implementation
         `,
@@ -33,8 +32,6 @@ export async function POST(req: Request) {
 					title: z.string(),
 					description: z.string(),
 					complexity: z.enum(["Low", "Medium", "High"]),
-					dependencies: z.array(z.string()),
-					technicalConsiderations: z.array(z.string()),
 				})
 			),
 		}),

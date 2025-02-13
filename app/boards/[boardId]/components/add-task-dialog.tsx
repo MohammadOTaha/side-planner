@@ -31,7 +31,6 @@ interface AITaskSuggestion {
 	title: string;
 	description: string;
 	complexity: "Low" | "Medium" | "High";
-	dependencies: string[];
 	technicalConsiderations: string[];
 }
 
@@ -135,32 +134,50 @@ export default function AddTaskDialog({ board, onTaskCreated }: Props) {
 								/>
 							</div>
 						) : (
-							<div className="space-y-4 max-h-[400px] overflow-y-auto">
+							<div className="space-y-4 max-h-[400px] overflow-y-auto px-1">
 								{aiSuggestions.map((suggestion, index) => (
 									<Card
 										key={index}
 										className={cn(
-											"p-4 cursor-pointer hover:bg-accent transition-colors",
-											selectedTasks.has(index) &&
-												"border-primary"
+											"p-4 cursor-pointer hover:bg-accent/50 transition-all border-2",
+											selectedTasks.has(index)
+												? "border-primary shadow-sm"
+												: "border-border/50"
 										)}
 										onClick={() =>
 											toggleTaskSelection(index)
 										}
 									>
-										<div className="flex items-start justify-between">
-											<div>
-												<h4 className="font-semibold">
-													{suggestion.title}
-												</h4>
-												<div className="flex gap-2 mt-2">
-													<span className="text-xs bg-secondary px-2 py-1 rounded">
+										<div className="flex items-start justify-between gap-4">
+											<div className="space-y-3 flex-1">
+												<div>
+													<h4 className="font-medium text-sm">
+														{suggestion.title}
+													</h4>
+													<p className="text-sm text-muted-foreground mt-1">
+														{suggestion.description}
+													</p>
+												</div>
+												<div className="flex items-center gap-3">
+													<span
+														className={cn(
+															"text-xs px-2 py-1 rounded-full font-medium",
+															suggestion.complexity ===
+																"Low"
+																? "bg-emerald-500/10 text-emerald-600"
+																: suggestion.complexity ===
+																  "Medium"
+																? "bg-amber-500/10 text-amber-600"
+																: "bg-rose-500/10 text-rose-600"
+														)}
+													>
+														Complexity:{" "}
 														{suggestion.complexity}
 													</span>
 												</div>
 											</div>
 											{selectedTasks.has(index) && (
-												<Check className="h-5 w-5 text-primary" />
+												<Check className="h-5 w-5 text-primary shrink-0" />
 											)}
 										</div>
 									</Card>
