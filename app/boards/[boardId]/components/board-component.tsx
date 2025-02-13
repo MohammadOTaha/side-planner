@@ -17,7 +17,7 @@ import { type Board, type Task } from "@/lib/db/schema";
 import {
 	updateBoardAction,
 	updateTaskStatusAction,
-} from "@/app/(dashboard)/boards/actions";
+} from "@/app/boards/actions";
 import { getBoardTasks } from "@/lib/db/queries";
 import AddTaskDialog from "./add-task-dialog";
 

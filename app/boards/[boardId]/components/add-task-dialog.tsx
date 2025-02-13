@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Plus, Sparkles } from "lucide-react";
 import { type Board } from "@/lib/db/schema";
-import { createTaskAction } from "@/app/(dashboard)/boards/actions";
+import { createTaskAction } from "@/app/boards/actions";
 import { GlowButton } from "@/components/ui/glow-button";
 
 interface Props {
