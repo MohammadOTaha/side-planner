@@ -82,7 +82,6 @@ export const boards = pgTable("boards", {
 export const tasks = pgTable("tasks", {
 	id: serial("id").primaryKey(),
 	title: varchar("title", { length: 255 }).notNull(),
-	description: text("description"),
 	status: varchar("status", { length: 50 }).notNull().default("todo"),
 	priority: varchar("priority", { length: 20 }).notNull().default("medium"),
 	boardId: integer("board_id")

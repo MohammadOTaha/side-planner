@@ -49,11 +49,6 @@ export default function KanbanTask({ task }: Props) {
 					{format(task.createdAt)}
 				</span>
 			</div>
-			{task.description && (
-				<p className="text-xs text-muted-foreground mt-1">
-					{task.description}
-				</p>
-			)}
 		</Card>
 	);
 }

@@ -12,7 +12,6 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
 import { type Board } from "@/lib/db/schema";
 import { createTaskAction } from "../actions";
@@ -25,7 +24,6 @@ interface Props {
 export default function AddTaskDialog({ board, onTaskCreated }: Props) {
 	const [open, setOpen] = useState(false);
 	const [title, setTitle] = useState("");
-	const [description, setDescription] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -35,18 +33,15 @@ export default function AddTaskDialog({ board, onTaskCreated }: Props) {
 		try {
 			await createTaskAction({
 				title,
-				description,
 				boardId: board.id,
 				status: "todo",
 			});
 
 			setTitle("");
-			setDescription("");
 			setOpen(false);
 			onTaskCreated?.();
 		} catch (error) {
 			console.error("Failed to create task:", error);
-			// You might want to show an error toast here
 		} finally {
 			setIsLoading(false);
 		}
@@ -76,14 +71,6 @@ export default function AddTaskDialog({ board, onTaskCreated }: Props) {
 								placeholder="Task title"
 								value={title}
 								onChange={(e) => setTitle(e.target.value)}
-							/>
-						</div>
-						<div className="space-y-2">
-							<Textarea
-								id="description"
-								placeholder="Add a description..."
-								value={description}
-								onChange={(e) => setDescription(e.target.value)}
 							/>
 						</div>
 					</div>

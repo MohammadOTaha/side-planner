@@ -16,7 +16,9 @@ export default async function BoardPage({ params }: Props) {
 		redirect("/login");
 	}
 
-	const board = await getBoard(parseInt(params.boardId), user.id);
+	const { boardId } = await params;
+
+	const board = await getBoard(parseInt(boardId), user.id);
 	if (!board) {
 		redirect("/boards");
 	}
