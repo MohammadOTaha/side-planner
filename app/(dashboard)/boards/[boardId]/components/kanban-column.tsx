@@ -6,21 +6,18 @@ import {
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import KanbanTask from "@/app/(dashboard)/board/components/kanban-task";
+import KanbanTask from "./kanban-task";
 import { cn } from "@/lib/utils";
+import { type Task } from "@/lib/db/schema";
 
-interface Task {
-	id: string;
-	title: string;
-	description?: string;
-	status: "backlog" | "todo" | "in-progress" | "done";
-	createdAt: Date;
+interface KanbanTask extends Omit<Task, "id"> {
+	id: string; // For DnD we need string IDs
 }
 
 interface Column {
 	id: string;
 	title: string;
-	tasks: Task[];
+	tasks: KanbanTask[];
 }
 
 interface Props {
@@ -62,7 +59,7 @@ export default function KanbanColumn({ column }: Props) {
 					"p-2 transition-colors min-h-[500px]",
 					"rounded-b-lg",
 					isOver
-						? "bg-blue-100"
+						? "bg-blue-100/10"
 						: isBacklog
 						? "bg-muted/5"
 						: "bg-muted/30"
