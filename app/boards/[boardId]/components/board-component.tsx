@@ -205,24 +205,29 @@ export default function BoardComponent({ board }: Props) {
 				onDragStart={handleDragStart}
 				onDragEnd={handleDragEnd}
 			>
-				<div className="flex gap-6">
+				<div className="flex gap-6 h-[calc(100vh-12rem)] overflow-hidden">
 					{/* Backlog Column */}
-					<div className="w-80">
+					<div className="w-80 overflow-y-auto">
 						<SortableContext items={[columns[0].id]}>
 							<KanbanColumn column={columns[0]} />
 						</SortableContext>
 					</div>
 
 					{/* Vertical Separator */}
-					<div className="w-px bg-border/50 mx-2" />
+					<div className="w-px bg-border/50 mx-2 h-full" />
 
 					{/* Main Columns */}
-					<div className="grid grid-cols-3 gap-6 flex-1">
+					<div className="grid grid-cols-3 gap-6 flex-1 overflow-x-auto">
 						<SortableContext
 							items={columns.slice(1).map((col) => col.id)}
 						>
 							{columns.slice(1).map((column) => (
-								<KanbanColumn key={column.id} column={column} />
+								<div
+									key={column.id}
+									className="overflow-y-auto"
+								>
+									<KanbanColumn column={column} />
+								</div>
 							))}
 						</SortableContext>
 					</div>

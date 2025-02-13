@@ -62,7 +62,7 @@ export default function KanbanColumn({ column }: Props) {
 	return (
 		<Card
 			className={cn(
-				"bg-background border-border/40",
+				"bg-background border-border/40 h-full flex flex-col",
 				isBacklog && "bg-muted/10"
 			)}
 		>
@@ -87,7 +87,7 @@ export default function KanbanColumn({ column }: Props) {
 			<CardContent
 				ref={setNodeRef}
 				className={cn(
-					"p-2 transition-colors min-h-[500px]",
+					"p-2 transition-colors flex-1 overflow-y-auto",
 					"rounded-b-lg",
 					isOver
 						? "bg-blue-100/10"
@@ -100,7 +100,7 @@ export default function KanbanColumn({ column }: Props) {
 					items={column.tasks.map((task) => task.id)}
 					strategy={verticalListSortingStrategy}
 				>
-					<div className="flex flex-col gap-2">
+					<div className="flex flex-col gap-3">
 						{column.tasks.map((task) => (
 							<KanbanTask key={task.id} task={task} />
 						))}

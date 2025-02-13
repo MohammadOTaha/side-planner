@@ -37,15 +37,17 @@ export default function KanbanTask({ task }: Props) {
 			ref={setNodeRef}
 			style={style}
 			className={cn(
-				"p-3 cursor-grab active:cursor-grabbing hover:bg-muted/50 transition-colors",
+				"p-3 cursor-grab active:cursor-grabbing hover:bg-muted/50 transition-colors border-border/40",
 				isDragging && "opacity-50"
 			)}
 			{...attributes}
 			{...listeners}
 		>
 			<div className="flex items-center justify-between gap-2">
-				<span className="text-sm font-medium">{task.title}</span>
-				<span className="text-xs text-muted-foreground">
+				<p className="text-sm font-medium truncate flex-1">
+					{task.title}
+				</p>
+				<span className="text-xs text-muted-foreground whitespace-nowrap">
 					{format(task.createdAt)}
 				</span>
 			</div>
