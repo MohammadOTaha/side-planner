@@ -249,3 +249,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Added glowing animation keyframes for animate-glow class */
+@keyframes glow {
+  0% { box-shadow: 0 0 10px rgba(168,85,247,0.2); }
+  50% { box-shadow: 0 0 20px rgba(168,85,247,0.8); }
+  100% { box-shadow: 0 0 10px rgba(168,85,247,0.2); }
+}
+
+.animate-glow {
+  animation: glow 1.5s infinite ease-in-out;
+}

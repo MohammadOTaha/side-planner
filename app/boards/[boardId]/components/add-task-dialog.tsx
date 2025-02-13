@@ -204,6 +204,7 @@ export default function AddTaskDialog({
 									type="button"
 									disabled={!title.trim() || isLoading}
 									onClick={handleAiPlan}
+									loading={isLoading}
 								>
 									{isLoading ? "Planning..." : "Plan with AI"}
 								</GlowButton>
@@ -221,11 +222,12 @@ export default function AddTaskDialog({
 								>
 									Back
 								</Button>
-								<Button
+								<GlowButton
 									type="submit"
 									disabled={
 										selectedTasks.size === 0 || isLoading
 									}
+									loading={isLoading}
 								>
 									{isLoading
 										? isAiMode
@@ -236,7 +238,7 @@ export default function AddTaskDialog({
 													? ""
 													: "s"
 										  }`}
-								</Button>
+								</GlowButton>
 							</>
 						)}
 					</DialogFooter>
