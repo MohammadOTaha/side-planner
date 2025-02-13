@@ -14,7 +14,7 @@ import KanbanColumn from "./kanban-column";
 import { Card } from "@/components/ui/card";
 import ProjectHeader from "./project-header";
 import { type Board, type Task } from "@/lib/db/schema";
-import { updateTaskStatusAction } from "../actions";
+import { updateTaskStatusAction } from "@/app/(dashboard)/boards/actions";
 import { getBoardTasks } from "@/lib/db/queries";
 import AddTaskDialog from "./add-task-dialog";
 

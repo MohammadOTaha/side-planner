@@ -6,8 +6,12 @@ import {
 	updateBoard,
 	deleteBoard,
 	getUser,
+	createTask,
+	updateTask,
+	deleteTask,
+	updateTaskStatus,
 } from "@/lib/db/queries";
-import { type NewBoard } from "@/lib/db/schema";
+import { NewTask, type NewBoard } from "@/lib/db/schema";
 
 export async function createNewBoard(data: Omit<NewBoard, "userId">) {
 	const user = await getUser();
@@ -46,4 +50,38 @@ export async function deleteExistingBoard(boardId: number) {
 
 	await deleteBoard(boardId, user.id);
 	revalidatePath("/boards");
+}
+
+export async function createTaskAction(data: NewTask) {
+	const user = await getUser();
+	if (!user) {
+		throw new Error("Not authenticated");
+	}
+
+	await createTask(data);
+	revalidatePath(`/boards/${data.boardId}`);
+}
+
+export async function updateTaskStatusAction(
+	taskId: number,
+	boardId: number,
+	status: string
+) {
+	const user = await getUser();
+	if (!user) {
+		throw new Error("Not authenticated");
+	}
+
+	await updateTaskStatus(taskId, boardId, status);
+	revalidatePath(`/boards/${boardId}`);
+}
+
+export async function deleteTaskAction(taskId: number, boardId: number) {
+	const user = await getUser();
+	if (!user) {
+		throw new Error("Not authenticated");
+	}
+
+	await deleteTask(taskId, boardId);
+	revalidatePath(`/boards/${boardId}`);
 }

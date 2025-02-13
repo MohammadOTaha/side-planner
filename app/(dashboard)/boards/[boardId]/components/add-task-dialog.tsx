@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import { type Board } from "@/lib/db/schema";
-import { createTaskAction } from "../actions";
+import { createTaskAction } from "@/app/(dashboard)/boards/actions";
 
 interface Props {
 	board: Board;
