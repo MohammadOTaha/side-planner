@@ -15,6 +15,13 @@
       "when": 1739471423024,
       "tag": "0001_true_korg",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1739487303296,
+      "tag": "0002_dashing_silver_surfer",
+      "breakpoints": true
     }
   ]
 }

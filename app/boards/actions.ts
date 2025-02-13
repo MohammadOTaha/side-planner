@@ -89,7 +89,7 @@ export async function deleteTaskAction(taskId: number, boardId: number) {
 interface AITaskSuggestion {
 	title: string;
 	description: string;
-	complexity: "Low" | "Medium" | "High";
+	complexity: "Easy" | "Medium" | "Hard";
 }
 
 export async function getAITaskSuggestionsAction(

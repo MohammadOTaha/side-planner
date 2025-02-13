@@ -21,6 +21,14 @@ import {
 import { GlowButton } from "@/components/ui/glow-button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 interface Props {
 	board: Board;
@@ -31,7 +39,7 @@ interface Props {
 interface AITaskSuggestion {
 	title: string;
 	description: string;
-	complexity: "Low" | "Medium" | "High";
+	complexity: "Easy" | "Medium" | "Hard";
 }
 
 export default function AddTaskDialog({
@@ -45,6 +53,7 @@ export default function AddTaskDialog({
 	const [aiSuggestions, setAiSuggestions] = useState<AITaskSuggestion[]>([]);
 	const [selectedTasks, setSelectedTasks] = useState<Set<number>>(new Set());
 	const [isAiMode, setIsAiMode] = useState(false);
+	const [complexity, setComplexity] = useState("medium");
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -59,6 +68,7 @@ export default function AddTaskDialog({
 						title: task.title,
 						boardId: board.id,
 						status: "backlog",
+						complexity: task.complexity.toLowerCase(),
 					});
 				}
 			} else {
@@ -66,6 +76,7 @@ export default function AddTaskDialog({
 					title,
 					boardId: board.id,
 					status: "backlog",
+					complexity,
 				});
 			}
 
@@ -137,6 +148,30 @@ export default function AddTaskDialog({
 									onChange={(e) => setTitle(e.target.value)}
 									placeholder="What do you want to get done?"
 								/>
+								<div>
+									<Label htmlFor="complexity">
+										Complexity
+									</Label>
+									<Select
+										value={complexity}
+										onValueChange={setComplexity}
+									>
+										<SelectTrigger id="complexity">
+											<SelectValue placeholder="Select complexity" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="easy">
+												Easy
+											</SelectItem>
+											<SelectItem value="medium">
+												Medium
+											</SelectItem>
+											<SelectItem value="hard">
+												Hard
+											</SelectItem>
+										</SelectContent>
+									</Select>
+								</div>
 							</div>
 						) : (
 							<div className="space-y-4 max-h-[400px] overflow-y-auto px-1">
@@ -168,7 +203,7 @@ export default function AddTaskDialog({
 														className={cn(
 															"text-xs px-2 py-1 rounded-full font-medium",
 															suggestion.complexity ===
-																"Low"
+																"Easy"
 																? "bg-emerald-500/10 text-emerald-600"
 																: suggestion.complexity ===
 																  "Medium"

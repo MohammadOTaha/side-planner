@@ -24,7 +24,7 @@ export async function POST(req: Request) {
         3. For each subtask:
         - Provide a clear, specific title
         - Add a brief description
-        - Estimate complexity (Low/Medium/High)
+        - Estimate complexity (Easy/Medium/Hard)
         4. Order subtasks in a logical sequence of implementation
         `,
 		schema: z.object({
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
 				z.object({
 					title: z.string(),
 					description: z.string(),
-					complexity: z.enum(["Low", "Medium", "High"]),
+					complexity: z.enum(["Easy", "Medium", "Hard"]),
 				})
 			),
 		}),

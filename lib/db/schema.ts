@@ -84,6 +84,9 @@ export const tasks = pgTable("tasks", {
 	title: varchar("title", { length: 255 }).notNull(),
 	status: varchar("status", { length: 50 }).notNull().default("todo"),
 	priority: varchar("priority", { length: 20 }).notNull().default("medium"),
+	complexity: varchar("complexity", { length: 10 })
+		.notNull()
+		.default("medium"),
 	boardId: integer("board_id")
 		.notNull()
 		.references(() => boards.id),
