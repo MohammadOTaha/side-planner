@@ -90,19 +90,20 @@ interface AITaskSuggestion {
 	title: string;
 	description: string;
 	complexity: "Low" | "Medium" | "High";
-	dependencies: string[];
-	technicalConsiderations: string[];
 }
 
 export async function getAITaskSuggestionsAction(
 	projectName: string,
 	projectDescription: string,
-	taskDescription: string
+	taskDescription: string,
+	existingTasks: string
 ): Promise<AITaskSuggestion[]> {
 	const user = await getUser();
 	if (!user) {
 		throw new Error("Not authenticated");
 	}
+
+	console.log(existingTasks);
 
 	const response = await fetch(`${process.env.BASE_URL}/api/ai`, {
 		method: "POST",
@@ -110,6 +111,7 @@ export async function getAITaskSuggestionsAction(
 			projectName,
 			projectDescription,
 			taskDescription,
+			existingTasks,
 		}),
 	});
 

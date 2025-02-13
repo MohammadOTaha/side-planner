@@ -197,7 +197,14 @@ export default function BoardComponent({ board }: Props) {
 						loadTasks();
 					}}
 				/>
-				<AddTaskDialog board={board} onTaskCreated={loadTasks} />
+				<AddTaskDialog
+					board={board}
+					onTaskCreated={loadTasks}
+					existingTasks={columns
+						.flatMap((col) => col.tasks)
+						.map((task) => `[${task.title}]`)
+						.join(", ")}
+				/>
 			</div>
 
 			<DndContext

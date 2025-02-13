@@ -25,16 +25,20 @@ import { cn } from "@/lib/utils";
 interface Props {
 	board: Board;
 	onTaskCreated?: () => void;
+	existingTasks?: string;
 }
 
 interface AITaskSuggestion {
 	title: string;
 	description: string;
 	complexity: "Low" | "Medium" | "High";
-	technicalConsiderations: string[];
 }
 
-export default function AddTaskDialog({ board, onTaskCreated }: Props) {
+export default function AddTaskDialog({
+	board,
+	onTaskCreated,
+	existingTasks,
+}: Props) {
 	const [open, setOpen] = useState(false);
 	const [title, setTitle] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
@@ -54,14 +58,14 @@ export default function AddTaskDialog({ board, onTaskCreated }: Props) {
 					await createTaskAction({
 						title: task.title,
 						boardId: board.id,
-						status: "todo",
+						status: "backlog",
 					});
 				}
 			} else {
 				await createTaskAction({
 					title,
 					boardId: board.id,
-					status: "todo",
+					status: "backlog",
 				});
 			}
 
@@ -85,7 +89,8 @@ export default function AddTaskDialog({ board, onTaskCreated }: Props) {
 			const suggestions = await getAITaskSuggestionsAction(
 				board.name,
 				board.description || "",
-				title
+				title,
+				existingTasks || ""
 			);
 			setAiSuggestions(suggestions);
 		} catch (error) {
