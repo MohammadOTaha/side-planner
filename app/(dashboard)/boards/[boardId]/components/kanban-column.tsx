@@ -9,6 +9,13 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import KanbanTask from "./kanban-task";
 import { cn } from "@/lib/utils";
 import { type Task } from "@/lib/db/schema";
+import {
+	FolderIcon,
+	DocumentTextIcon,
+	ArrowPathIcon,
+	CheckCircleIcon,
+	TagIcon,
+} from "@heroicons/react/24/outline";
 
 interface KanbanTask extends Omit<Task, "id"> {
 	id: string; // For DnD we need string IDs
@@ -31,6 +38,27 @@ export default function KanbanColumn({ column }: Props) {
 
 	const isBacklog = column.id === "backlog";
 
+	const getColumnIcon = (id: string) => {
+		switch (id) {
+			case "backlog":
+				return <FolderIcon className="h-5 w-5 mr-2 text-blue-500" />;
+			case "todo":
+				return (
+					<DocumentTextIcon className="h-5 w-5 mr-2 text-yellow-500" />
+				);
+			case "in-progress":
+				return (
+					<ArrowPathIcon className="h-5 w-5 mr-2 text-orange-500" />
+				);
+			case "done":
+				return (
+					<CheckCircleIcon className="h-5 w-5 mr-2 text-green-500" />
+				);
+			default:
+				return <TagIcon className="h-5 w-5 mr-2 text-gray-500" />;
+		}
+	};
+
 	return (
 		<Card
 			className={cn(
@@ -40,7 +68,10 @@ export default function KanbanColumn({ column }: Props) {
 		>
 			<CardHeader className="p-4">
 				<CardTitle className="text-sm font-medium flex items-center justify-between">
-					{column.title}
+					<div className="flex items-center">
+						{getColumnIcon(column.id)}
+						<span>{column.title}</span>
+					</div>
 					<span
 						className={cn(
 							"px-2 py-1 rounded-full text-xs",
