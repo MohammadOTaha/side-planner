@@ -10,7 +10,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { deleteExistingBoard } from "../actions";
+import { deleteBoardAction } from "../actions";
 import { type Board } from "@/lib/db/schema";
 
 interface Props {
@@ -30,7 +30,7 @@ export default function DeleteBoardDialog({
 		setIsLoading(true);
 
 		try {
-			await deleteExistingBoard(board.id);
+			await deleteBoardAction(board.id);
 			onBoardDeleted(board.id);
 		} catch (error) {
 			console.error("Failed to delete board:", error);

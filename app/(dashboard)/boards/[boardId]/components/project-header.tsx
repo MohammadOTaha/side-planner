@@ -9,15 +9,13 @@ import { Pencil, Save } from "lucide-react";
 interface Props {
 	title: string;
 	description?: string | null;
-	onUpdateTitle?: (title: string) => void;
-	onUpdateDescription?: (description: string) => void;
+	onUpdateBoard?: (title: string, description: string) => void;
 }
 
 export default function ProjectHeader({
 	title,
 	description,
-	onUpdateTitle,
-	onUpdateDescription,
+	onUpdateBoard,
 }: Props) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedTitle, setEditedTitle] = useState(title);
@@ -27,8 +25,7 @@ export default function ProjectHeader({
 
 	const handleSave = () => {
 		if (editedTitle.trim()) {
-			onUpdateTitle?.(editedTitle);
-			onUpdateDescription?.(editedDescription);
+			onUpdateBoard?.(editedTitle, editedDescription);
 			setIsEditing(false);
 		}
 	};

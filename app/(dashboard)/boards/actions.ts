@@ -13,7 +13,7 @@ import {
 } from "@/lib/db/queries";
 import { NewTask, type NewBoard } from "@/lib/db/schema";
 
-export async function createNewBoard(data: Omit<NewBoard, "userId">) {
+export async function createBoardAction(data: Omit<NewBoard, "userId">) {
 	const user = await getUser();
 	if (!user) {
 		throw new Error("Not authenticated");
@@ -28,7 +28,7 @@ export async function createNewBoard(data: Omit<NewBoard, "userId">) {
 	return board;
 }
 
-export async function updateExistingBoard(
+export async function updateBoardAction(
 	boardId: number,
 	data: Partial<NewBoard>
 ) {
@@ -42,7 +42,7 @@ export async function updateExistingBoard(
 	return board;
 }
 
-export async function deleteExistingBoard(boardId: number) {
+export async function deleteBoardAction(boardId: number) {
 	const user = await getUser();
 	if (!user) {
 		throw new Error("Not authenticated");

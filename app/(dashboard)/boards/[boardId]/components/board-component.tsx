@@ -14,7 +14,10 @@ import KanbanColumn from "./kanban-column";
 import { Card } from "@/components/ui/card";
 import ProjectHeader from "./project-header";
 import { type Board, type Task } from "@/lib/db/schema";
-import { updateTaskStatusAction } from "@/app/(dashboard)/boards/actions";
+import {
+	updateBoardAction,
+	updateTaskStatusAction,
+} from "@/app/(dashboard)/boards/actions";
 import { getBoardTasks } from "@/lib/db/queries";
 import AddTaskDialog from "./add-task-dialog";
 
@@ -186,6 +189,13 @@ export default function BoardComponent({ board }: Props) {
 				<ProjectHeader
 					title={board.name}
 					description={board.description || "Manage your tasks"}
+					onUpdateBoard={async (title, description) => {
+						await updateBoardAction(board.id, {
+							name: title,
+							description,
+						});
+						loadTasks();
+					}}
 				/>
 				<AddTaskDialog board={board} onTaskCreated={loadTasks} />
 			</div>

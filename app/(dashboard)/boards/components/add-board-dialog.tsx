@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { createNewBoard } from "../actions";
+import { createBoardAction } from "../actions";
 import { type Board } from "@/lib/db/schema";
 import { Plus } from "lucide-react";
 
@@ -33,7 +33,7 @@ export default function AddBoardDialog({ onBoardCreated, children }: Props) {
 		setIsLoading(true);
 
 		try {
-			const board = await createNewBoard({
+			const board = await createBoardAction({
 				name,
 				description,
 			});

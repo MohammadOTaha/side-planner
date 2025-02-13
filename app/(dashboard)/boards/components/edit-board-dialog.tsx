@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { updateExistingBoard } from "../actions";
+import { updateBoardAction } from "../actions";
 import { type Board } from "@/lib/db/schema";
 
 interface Props {
@@ -40,7 +40,7 @@ export default function EditBoardDialog({
 		setIsLoading(true);
 
 		try {
-			const updatedBoard = await updateExistingBoard(board.id, {
+			const updatedBoard = await updateBoardAction(board.id, {
 				name,
 				description,
 			});
