@@ -12,9 +12,10 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-react";
+import { Plus, Sparkles } from "lucide-react";
 import { type Board } from "@/lib/db/schema";
 import { createTaskAction } from "@/app/(dashboard)/boards/actions";
+import { GlowButton } from "@/components/ui/glow-button";
 
 interface Props {
 	board: Board;
@@ -58,19 +59,15 @@ export default function AddTaskDialog({ board, onTaskCreated }: Props) {
 			<DialogContent>
 				<form onSubmit={handleSubmit}>
 					<DialogHeader>
-						<DialogTitle>Create New Task</DialogTitle>
-						<DialogDescription>
-							Add a new task to your board. Click save when you're
-							done.
-						</DialogDescription>
+						<DialogTitle>Create Task</DialogTitle>
 					</DialogHeader>
 					<div className="space-y-4 py-4">
 						<div className="space-y-2">
 							<Input
 								id="title"
-								placeholder="Task title"
 								value={title}
 								onChange={(e) => setTitle(e.target.value)}
+								placeholder="What do you want to get done?"
 							/>
 						</div>
 					</div>
@@ -78,9 +75,16 @@ export default function AddTaskDialog({ board, onTaskCreated }: Props) {
 						<Button
 							type="submit"
 							disabled={!title.trim() || isLoading}
+							variant="outline"
 						>
 							{isLoading ? "Creating..." : "Create Task"}
 						</Button>
+						<GlowButton
+							type="submit"
+							disabled={!title.trim() || isLoading}
+						>
+							{isLoading ? "Planning..." : "Plan with AI"}
+						</GlowButton>
 					</DialogFooter>
 				</form>
 			</DialogContent>
