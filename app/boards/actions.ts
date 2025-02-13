@@ -85,3 +85,38 @@ export async function deleteTaskAction(taskId: number, boardId: number) {
 	await deleteTask(taskId, boardId);
 	revalidatePath(`/boards/${boardId}`);
 }
+
+interface AITaskSuggestion {
+	title: string;
+	description: string;
+	complexity: "Low" | "Medium" | "High";
+	dependencies: string[];
+	technicalConsiderations: string[];
+}
+
+export async function getAITaskSuggestionsAction(
+	projectName: string,
+	projectDescription: string,
+	taskDescription: string
+): Promise<AITaskSuggestion[]> {
+	const user = await getUser();
+	if (!user) {
+		throw new Error("Not authenticated");
+	}
+
+	const response = await fetch(`${process.env.BASE_URL}/api/ai`, {
+		method: "POST",
+		body: JSON.stringify({
+			projectName,
+			projectDescription,
+			taskDescription,
+		}),
+	});
+
+	if (!response.ok) {
+		throw new Error("Failed to get AI suggestions");
+	}
+
+	const data = await response.json();
+	return data.tasks;
+}
