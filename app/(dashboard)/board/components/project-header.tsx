@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Edit2, Plus } from "lucide-react";
+import { ChevronDown, Edit2, Plus, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -62,6 +62,14 @@ export default function ProjectHeader({
 			setNewTaskDescription("");
 			setIsAddTaskModalOpen(false);
 		}
+	};
+
+	const handlePlanWithAI = () => {
+		console.log("Plan with AI clicked");
+		// Placeholder action for Plan with AI
+		setNewTaskTitle("");
+		setNewTaskDescription("");
+		setIsAddTaskModalOpen(false);
 	};
 
 	return (
@@ -131,12 +139,9 @@ export default function ProjectHeader({
 							<DialogTitle>Add New Task</DialogTitle>
 						</DialogHeader>
 						<div className="grid gap-4 py-4">
-							<div className="grid grid-cols-4 items-center gap-4">
-								<Label
-									htmlFor="task-title"
-									className="text-right"
-								>
-									Title
+							<div className="flex flex-col gap-2">
+								<Label htmlFor="task-title">
+									What do you wanna do next?
 								</Label>
 								<Input
 									id="task-title"
@@ -144,28 +149,19 @@ export default function ProjectHeader({
 									onChange={(e) =>
 										setNewTaskTitle(e.target.value)
 									}
-									className="col-span-3"
-								/>
-							</div>
-							<div className="grid grid-cols-4 items-center gap-4">
-								<Label
-									htmlFor="task-description"
-									className="text-right"
-								>
-									Description
-								</Label>
-								<Textarea
-									id="task-description"
-									value={newTaskDescription}
-									onChange={(e) =>
-										setNewTaskDescription(e.target.value)
-									}
-									className="col-span-3"
 								/>
 							</div>
 						</div>
-						<div className="flex justify-end">
+						<div className="flex justify-end space-x-2">
 							<Button onClick={handleAddTask}>Add Task</Button>
+							<Button
+								variant="default"
+								onClick={handlePlanWithAI}
+								className="flex items-center space-x-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-md shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+							>
+								<Sparkles className="h-4 w-4" />
+								<span>Plan with AI</span>
+							</Button>
 						</div>
 					</DialogContent>
 				</Dialog>
