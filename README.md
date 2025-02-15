@@ -4,6 +4,10 @@
 
 A web-based personal side projects management application that combines traditional task board functionality with AI assistance for intelligent project planning. The system helps individuals organize their development workflow while leveraging AI to suggest sub and related tasks.
 
+> **AI Model Used**: gemini-2.0-flash-exp (get a free API key [here](https://aistudio.google.com/apikey))
+
+> If you want to update the prompt to fit your use case, you can do so in the [route.ts](app/api/ai/route.ts) file.
+
 ### Core Features:
 
 - Personal Board Management
@@ -26,6 +30,7 @@ This project is based on a template built with Next.js, Shadcn/ui, and Drizzle.
 - **Database**: [Postgres](https://www.postgresql.org/)
 - **ORM**: [Drizzle](https://orm.drizzle.team/)
 - **UI Library**: [shadcn/ui](https://ui.shadcn.com/)
+- **Vercel AI SDK**: [Vercel AI](https://sdk.vercel.ai/docs/introduction)
 
 #### Getting Started
 
@@ -72,3 +77,4 @@ In your Vercel project settings (or during deployment), add all the necessary en
 1. `BASE_URL`: Set this to your production domain.
 2. `POSTGRES_URL`: Set this to your production database URL.
 3. `AUTH_SECRET`: Set this to a random string. `openssl rand -base64 32` will generate one.
+4. `GOOGLE_GENERATIVE_AI_API_KEY`: Set this to your Google Generative AI API key.
