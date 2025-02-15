@@ -54,7 +54,7 @@ export default function AddBoardDialog({ onBoardCreated, children }: Props) {
 			<DialogTrigger asChild>
 				{children || (
 					<Button>
-						<Plus className="h-4 w-4 mr-2" />
+						<Plus className="mr-2 h-4 w-4" />
 						Add Board
 					</Button>
 				)}
@@ -64,8 +64,8 @@ export default function AddBoardDialog({ onBoardCreated, children }: Props) {
 					<DialogHeader>
 						<DialogTitle>Create New Board</DialogTitle>
 						<DialogDescription>
-							Create a new board to organize your tasks. Click
-							save when you're done.
+							Create a new board to organize your tasks. Click save when you're
+							done.
 						</DialogDescription>
 					</DialogHeader>
 					<div className="grid gap-4 py-4">
@@ -90,11 +90,7 @@ export default function AddBoardDialog({ onBoardCreated, children }: Props) {
 						</div>
 					</div>
 					<DialogFooter>
-						<Button
-							type="submit"
-							disabled={isLoading}
-							className="w-full"
-						>
+						<Button type="submit" disabled={isLoading} className="w-full">
 							{isLoading ? "Creating..." : "Create Board"}
 						</Button>
 					</DialogFooter>

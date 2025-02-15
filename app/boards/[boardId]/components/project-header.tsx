@@ -28,9 +28,7 @@ export default function ProjectHeader({
 	return (
 		<div className="group relative space-y-1.5">
 			<div className="flex items-center gap-2">
-				<h2 className="text-2xl font-semibold tracking-tight">
-					{title}
-				</h2>
+				<h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
 				<div className="flex items-center gap-1">
 					<EditProjectDialog
 						board={
@@ -45,7 +43,7 @@ export default function ProjectHeader({
 							<Button
 								variant="ghost"
 								size="sm"
-								className="opacity-0 group-hover:opacity-100 transition h-8"
+								className="h-8 opacity-0 transition group-hover:opacity-100"
 							>
 								<Pencil className="h-4 w-4" />
 							</Button>

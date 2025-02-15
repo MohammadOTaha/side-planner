@@ -56,9 +56,7 @@ export default function EditProjectDialog({ board, onUpdate, trigger }: Props) {
 				<form onSubmit={handleSubmit}>
 					<DialogHeader>
 						<DialogTitle>Edit Project</DialogTitle>
-						<DialogDescription>
-							Update your project details
-						</DialogDescription>
+						<DialogDescription>Update your project details</DialogDescription>
 					</DialogHeader>
 					<div className="space-y-4 py-4">
 						<div>
@@ -86,9 +84,7 @@ export default function EditProjectDialog({ board, onUpdate, trigger }: Props) {
 								<Input
 									id="features"
 									value={newFeature}
-									onChange={(e) =>
-										setNewFeature(e.target.value)
-									}
+									onChange={(e) => setNewFeature(e.target.value)}
 									placeholder="Add a feature"
 									onKeyDown={(e) => {
 										if (e.key === "Enter") {
@@ -109,18 +105,14 @@ export default function EditProjectDialog({ board, onUpdate, trigger }: Props) {
 								{features.map((feature, index) => (
 									<div
 										key={index}
-										className="flex items-center gap-2 bg-muted p-2 rounded-md"
+										className="bg-muted flex items-center gap-2 rounded-md p-2"
 									>
-										<span className="flex-1">
-											{feature}
-										</span>
+										<span className="flex-1">{feature}</span>
 										<Button
 											type="button"
 											variant="ghost"
 											size="icon"
-											onClick={() =>
-												handleRemoveFeature(index)
-											}
+											onClick={() => handleRemoveFeature(index)}
 											className="h-8 w-8"
 										>
 											<X className="h-4 w-4" />

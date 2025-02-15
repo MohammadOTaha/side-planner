@@ -29,8 +29,8 @@ function Header() {
 	}
 
 	return (
-		<header className="border-b border-gray-200 dark:border-gray-800 bg-background">
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+		<header className="bg-background border-b border-gray-200 dark:border-gray-800">
+			<div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
 				<Link href="/" className="flex items-center">
 					<CircleIcon className="h-6 w-6 text-orange-500" />
 					<span className="ml-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
@@ -46,12 +46,9 @@ function Header() {
 					</Link>
 					<ThemeToggle />
 					{user ? (
-						<DropdownMenu
-							open={isMenuOpen}
-							onOpenChange={setIsMenuOpen}
-						>
+						<DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
 							<DropdownMenuTrigger>
-								<Avatar className="cursor-pointer size-9">
+								<Avatar className="size-9 cursor-pointer">
 									<AvatarImage alt={user.name || ""} />
 									<AvatarFallback>
 										{user.email
@@ -63,19 +60,13 @@ function Header() {
 							</DropdownMenuTrigger>
 							<DropdownMenuContent align="end" className="w-56">
 								<DropdownMenuItem className="cursor-pointer">
-									<Link
-										href="/dashboard"
-										className="flex w-full items-center"
-									>
+									<Link href="/dashboard" className="flex w-full items-center">
 										<Home className="mr-2 h-4 w-4" />
 										<span>Dashboard</span>
 									</Link>
 								</DropdownMenuItem>
 								<form action={handleSignOut} className="w-full">
-									<button
-										type="submit"
-										className="flex w-full"
-									>
+									<button type="submit" className="flex w-full">
 										<DropdownMenuItem className="w-full flex-1 cursor-pointer">
 											<LogOut className="mr-2 h-4 w-4" />
 											<span>Sign out</span>
@@ -97,7 +88,7 @@ function Header() {
 
 export default function Layout({ children }: { children: React.ReactNode }) {
 	return (
-		<section className="flex flex-col min-h-screen">
+		<section className="flex min-h-screen flex-col">
 			<Header />
 			{children}
 		</section>

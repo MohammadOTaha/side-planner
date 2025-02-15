@@ -185,7 +185,7 @@ export default function BoardComponent({ board }: Props) {
 
 	return (
 		<>
-			<div className="flex items-center justify-between mb-6">
+			<div className="mb-6 flex items-center justify-between">
 				<ProjectHeader
 					title={board.name}
 					description={board.description}
@@ -214,7 +214,7 @@ export default function BoardComponent({ board }: Props) {
 				onDragStart={handleDragStart}
 				onDragEnd={handleDragEnd}
 			>
-				<div className="flex gap-6 h-[calc(100vh-12rem)] overflow-hidden">
+				<div className="flex h-[calc(100vh-12rem)] gap-6 overflow-hidden">
 					{/* Backlog Column */}
 					<div className="w-80 overflow-y-auto">
 						<SortableContext items={[columns[0].id]}>
@@ -223,18 +223,13 @@ export default function BoardComponent({ board }: Props) {
 					</div>
 
 					{/* Vertical Separator */}
-					<div className="w-px bg-border/50 mx-2 h-full" />
+					<div className="bg-border/50 mx-2 h-full w-px" />
 
 					{/* Main Columns */}
-					<div className="grid grid-cols-3 gap-6 flex-1 overflow-x-auto">
-						<SortableContext
-							items={columns.slice(1).map((col) => col.id)}
-						>
+					<div className="grid flex-1 grid-cols-3 gap-6 overflow-x-auto">
+						<SortableContext items={columns.slice(1).map((col) => col.id)}>
 							{columns.slice(1).map((column) => (
-								<div
-									key={column.id}
-									className="overflow-y-auto"
-								>
+								<div key={column.id} className="overflow-y-auto">
 									<KanbanColumn column={column} />
 								</div>
 							))}
@@ -244,7 +239,7 @@ export default function BoardComponent({ board }: Props) {
 
 				<DragOverlay>
 					{activeTask && (
-						<Card className="p-4 w-[300px] bg-background/60 backdrop-blur-sm shadow-2xl border border-border/50 scale-105">
+						<Card className="bg-background/60 border-border/50 w-[300px] scale-105 border p-4 shadow-2xl backdrop-blur-sm">
 							<p>{activeTask.title}</p>
 						</Card>
 					)}

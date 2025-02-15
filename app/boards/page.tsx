@@ -21,12 +21,9 @@ export default async function BoardsPage() {
 							<Skeleton className="h-8 w-[200px]" />
 							<Skeleton className="h-4 w-[300px]" />
 						</div>
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 							{[...Array(6)].map((_, i) => (
-								<Skeleton
-									key={i}
-									className="h-[200px] w-full"
-								/>
+								<Skeleton key={i} className="h-[200px] w-full" />
 							))}
 						</div>
 					</div>

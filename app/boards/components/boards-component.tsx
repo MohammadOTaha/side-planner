@@ -33,9 +33,7 @@ export default function BoardsComponent({ initialBoards }: Props) {
 
 	const handleBoardUpdated = (updatedBoard: Board) => {
 		setBoards((prev) =>
-			prev.map((board) =>
-				board.id === updatedBoard.id ? updatedBoard : board
-			)
+			prev.map((board) => (board.id === updatedBoard.id ? updatedBoard : board))
 		);
 		setEditingBoard(null);
 	};
@@ -49,31 +47,29 @@ export default function BoardsComponent({ initialBoards }: Props) {
 		<div className="space-y-8">
 			<div className="flex items-center justify-between">
 				<div className="space-y-1">
-					<h1 className="text-3xl font-bold tracking-tight">
-						Boards
-					</h1>
+					<h1 className="text-3xl font-bold tracking-tight">Boards</h1>
 					<p className="text-muted-foreground">
 						Create and manage your kanban boards
 					</p>
 				</div>
 				<AddBoardDialog onBoardCreated={handleBoardCreated}>
 					<Button size="sm">
-						<Plus className="h-4 w-4 mr-2" />
+						<Plus className="mr-2 h-4 w-4" />
 						New Board
 					</Button>
 				</AddBoardDialog>
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 				{boards.map((board) => (
 					<Card
 						key={board.id}
-						className="group relative hover:shadow-lg transition-all duration-200 hover:border-primary/50"
+						className="group hover:border-primary/50 relative transition-all duration-200 hover:shadow-lg"
 					>
 						<Link href={`/boards/${board.id}`}>
 							<CardHeader>
 								<CardTitle className="flex items-center gap-2">
-									<Layout className="h-5 w-5 text-primary" />
+									<Layout className="text-primary h-5 w-5" />
 									{board.name}
 								</CardTitle>
 								{board.description && (
@@ -82,13 +78,12 @@ export default function BoardsComponent({ initialBoards }: Props) {
 									</CardDescription>
 								)}
 							</CardHeader>
-							<CardContent className="text-sm text-muted-foreground">
-								Created{" "}
-								{format(new Date(board.createdAt), "PP")}
+							<CardContent className="text-muted-foreground text-sm">
+								Created {format(new Date(board.createdAt), "PP")}
 							</CardContent>
 						</Link>
 
-						<CardFooter className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity">
+						<CardFooter className="absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100">
 							<div className="flex gap-1">
 								<Button
 									variant="ghost"
@@ -118,12 +113,10 @@ export default function BoardsComponent({ initialBoards }: Props) {
 				))}
 
 				<AddBoardDialog onBoardCreated={handleBoardCreated}>
-					<Card className="flex items-center justify-center h-[200px] border-2 border-dashed hover:border-primary hover:bg-primary/5 cursor-pointer transition-colors">
-						<div className="flex flex-col items-center gap-2 text-muted-foreground">
+					<Card className="hover:border-primary hover:bg-primary/5 flex h-[200px] cursor-pointer items-center justify-center border-2 border-dashed transition-colors">
+						<div className="text-muted-foreground flex flex-col items-center gap-2">
 							<Plus className="h-8 w-8" />
-							<p className="text-sm font-medium">
-								Create New Board
-							</p>
+							<p className="text-sm font-medium">Create New Board</p>
 						</div>
 					</Card>
 				</AddBoardDialog>

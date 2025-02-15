@@ -8,59 +8,59 @@ A web-based personal project management application that combines traditional ta
 
 ### Core Features:
 
--   Personal Board Management
+- Personal Board Management
 
-    -   Customizable board view (Kanban-style)
-    -   Standard columns: Backlog, To Do, In Progress, Review, Done
-    -   Task cards with title, description, priority, and labels
-    -   Drag-and-drop functionality for task management
-    -   Personal milestone tracking
+  - Customizable board view (Kanban-style)
+  - Standard columns: Backlog, To Do, In Progress, Review, Done
+  - Task cards with title, description, priority, and labels
+  - Drag-and-drop functionality for task management
+  - Personal milestone tracking
 
--   AI Task Enhancement
+- AI Task Enhancement
 
-    -   AI analysis of existing tasks to suggest related subtasks
-    -   Automated identification of potential dependencies between tasks
-    -   Smart task categorization and labeling
-    -   Priority recommendations based on task relationships
-    -   Effort estimation suggestions based on task complexity
+  - AI analysis of existing tasks to suggest related subtasks
+  - Automated identification of potential dependencies between tasks
+  - Smart task categorization and labeling
+  - Priority recommendations based on task relationships
+  - Effort estimation suggestions based on task complexity
 
--   Task Management
+- Task Management
 
-    -   Create, edit, and delete tasks
-    -   Add notes and attachments to tasks
-    -   Set due dates and priorities
-    -   Track time spent on tasks
-    -   Personal tagging system for organization
+  - Create, edit, and delete tasks
+  - Add notes and attachments to tasks
+  - Set due dates and priorities
+  - Track time spent on tasks
+  - Personal tagging system for organization
 
--   AI Planning Assistant
+- AI Planning Assistant
 
-    -   Natural language processing for task creation and modification
-    -   Intelligent task breakdown suggestions
-    -   Project scope analysis and recommendations
-    -   Timeline optimization suggestions
-    -   Technical debt identification and management suggestions
+  - Natural language processing for task creation and modification
+  - Intelligent task breakdown suggestions
+  - Project scope analysis and recommendations
+  - Timeline optimization suggestions
+  - Technical debt identification and management suggestions
 
 This project is based on a template built with Next.js, Shadcn/ui, Drizzle, and Stripe.
 
 #### Features
 
--   Marketing landing page (`/`) with animated Terminal element
--   Pricing page (`/pricing`) which connects to Stripe Checkout
--   Dashboard pages with CRUD operations on users/teams
--   Basic RBAC with Owner and Member roles
--   Subscription management with Stripe Customer Portal
--   Email/password authentication with JWTs stored to cookies
--   Global middleware to protect logged-in routes
--   Local middleware to protect Server Actions or validate Zod schemas
--   Activity logging system for any user events
+- Marketing landing page (`/`) with animated Terminal element
+- Pricing page (`/pricing`) which connects to Stripe Checkout
+- Dashboard pages with CRUD operations on users/teams
+- Basic RBAC with Owner and Member roles
+- Subscription management with Stripe Customer Portal
+- Email/password authentication with JWTs stored to cookies
+- Global middleware to protect logged-in routes
+- Local middleware to protect Server Actions or validate Zod schemas
+- Activity logging system for any user events
 
 #### Tech Stack
 
--   **Framework**: [Next.js](https://nextjs.org/)
--   **Database**: [Postgres](https://www.postgresql.org/)
--   **ORM**: [Drizzle](https://orm.drizzle.team/)
--   **Payments**: [Stripe](https://stripe.com/)
--   **UI Library**: [shadcn/ui](https://ui.shadcn.com/)
+- **Framework**: [Next.js](https://nextjs.org/)
+- **Database**: [Postgres](https://www.postgresql.org/)
+- **ORM**: [Drizzle](https://orm.drizzle.team/)
+- **Payments**: [Stripe](https://stripe.com/)
+- **UI Library**: [shadcn/ui](https://ui.shadcn.com/)
 
 #### Getting Started
 
@@ -87,8 +87,8 @@ npm db:seed
 
 This will create the following user and team:
 
--   User: `test@test.com`
--   Password: `admin123`
+- User: `test@test.com`
+- Password: `admin123`
 
 You can, of course, create new users as well through `/sign-up`.
 
@@ -110,9 +110,9 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook
 
 To test Stripe payments, use the following test card details:
 
--   Card Number: `4242 4242 4242 4242`
--   Expiration: Any future date
--   CVC: Any 3-digit number
+- Card Number: `4242 4242 4242 4242`
+- Expiration: Any future date
+- CVC: Any 3-digit number
 
 #### Going to Production
 
@@ -144,6 +144,6 @@ In your Vercel project settings (or during deployment), add all the necessary en
 
 While this template is intentionally minimal and to be used as a learning resource, there are other paid versions in the community which are more full-featured:
 
--   https://achromatic.dev
--   https://shipfa.st
--   https://makerkit.dev
+- https://achromatic.dev
+- https://shipfa.st
+- https://makerkit.dev

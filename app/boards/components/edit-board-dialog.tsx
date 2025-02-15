@@ -60,8 +60,7 @@ export default function EditBoardDialog({
 					<DialogHeader>
 						<DialogTitle>Edit Board</DialogTitle>
 						<DialogDescription>
-							Make changes to your board. Click save when you're
-							done.
+							Make changes to your board. Click save when you're done.
 						</DialogDescription>
 					</DialogHeader>
 					<div className="grid gap-4 py-4">
@@ -86,11 +85,7 @@ export default function EditBoardDialog({
 						</div>
 					</div>
 					<DialogFooter>
-						<Button
-							type="submit"
-							disabled={isLoading}
-							className="w-full"
-						>
+						<Button type="submit" disabled={isLoading} className="w-full">
 							{isLoading ? "Saving..." : "Save Changes"}
 						</Button>
 					</DialogFooter>

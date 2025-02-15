@@ -51,36 +51,33 @@ export default function KanbanTask({ task }: Props) {
 			ref={setNodeRef}
 			style={style}
 			className={cn(
-				"p-3 cursor-grab active:cursor-grabbing hover:bg-muted/50 transition-colors border-border/40 flex flex-col min-h-[80px]",
+				"hover:bg-muted/50 border-border/40 flex min-h-[80px] cursor-grab flex-col p-3 transition-colors active:cursor-grabbing",
 				isDragging && "opacity-50"
 			)}
 			{...attributes}
 			{...listeners}
 		>
 			<div className="flex-1">
-				<div className="flex items-center gap-2 mb-2">
+				<div className="mb-2 flex items-center gap-2">
 					{getPriorityIcon(task.priority)}
-					<p className="text-sm font-medium break-words">
-						{task.title}
-					</p>
+					<p className="text-sm font-medium break-words">{task.title}</p>
 				</div>
 			</div>
-			<div className="flex justify-end items-center gap-2 mt-2">
-				<span className="text-xs text-muted-foreground">
+			<div className="mt-2 flex items-center justify-end gap-2">
+				<span className="text-muted-foreground text-xs">
 					{format(task.createdAt)}
 				</span>
 				<span
 					className={cn(
-						"text-xs px-2 py-1 rounded-full font-medium",
+						"rounded-full px-2 py-1 text-xs font-medium",
 						task.complexity === "easy"
 							? "bg-emerald-500/10 text-emerald-600"
 							: task.complexity === "medium"
-							? "bg-amber-500/10 text-amber-600"
-							: "bg-rose-500/10 text-rose-600"
+								? "bg-amber-500/10 text-amber-600"
+								: "bg-rose-500/10 text-rose-600"
 					)}
 				>
-					{task.complexity.charAt(0).toUpperCase() +
-						task.complexity.slice(1)}
+					{task.complexity.charAt(0).toUpperCase() + task.complexity.slice(1)}
 				</span>
 			</div>
 		</Card>

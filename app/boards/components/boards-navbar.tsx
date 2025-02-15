@@ -22,12 +22,12 @@ export default function BoardsNavbar() {
 	// Prevent flash of incorrect theme
 	if (!mounted) {
 		return (
-			<header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+			<header className="border-border/40 bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
 				<div className="container mx-auto">
 					<div className="flex h-14 items-center">
 						<nav className="flex flex-1 items-center justify-between">
 							<div className="flex items-center space-x-6">
-								<div className="w-[72px] h-[72px]" />
+								<div className="h-[72px] w-[72px]" />
 								{/* Rest of the skeleton UI */}
 							</div>
 						</nav>
@@ -39,20 +39,15 @@ export default function BoardsNavbar() {
 
 	const currentTheme = theme === "system" ? systemTheme : theme;
 	const logoSrc =
-		currentTheme === "dark"
-			? "/SidePlanner-bow.png"
-			: "/SidePlanner-wob.png";
+		currentTheme === "dark" ? "/SidePlanner-bow.png" : "/SidePlanner-wob.png";
 
 	return (
-		<header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+		<header className="border-border/40 bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
 			<div className="container mx-auto">
 				<div className="flex h-14 items-center">
 					<nav className="flex flex-1 items-center justify-between">
 						<div className="flex items-center space-x-6">
-							<Link
-								href="/boards"
-								className="flex items-center space-x-2"
-							>
+							<Link href="/boards" className="flex items-center space-x-2">
 								<Image
 									src={logoSrc}
 									alt="SidePlanner Logo"
@@ -65,15 +60,11 @@ export default function BoardsNavbar() {
 							<div className="flex items-center space-x-2">
 								<Link href="/boards">
 									<Button
-										variant={
-											isRootBoardsPath
-												? "outline"
-												: "ghost"
-										}
+										variant={isRootBoardsPath ? "outline" : "ghost"}
 										size="sm"
 										className="h-8"
 									>
-										<LayoutGrid className="h-4 w-4 mr-2" />
+										<LayoutGrid className="mr-2 h-4 w-4" />
 										All Boards
 									</Button>
 								</Link>

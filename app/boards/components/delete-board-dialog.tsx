@@ -45,17 +45,12 @@ export default function DeleteBoardDialog({
 				<DialogHeader>
 					<DialogTitle>Delete Board</DialogTitle>
 					<DialogDescription>
-						Are you sure you want to delete this board? This action
-						cannot be undone and all tasks in this board will be
-						deleted.
+						Are you sure you want to delete this board? This action cannot be
+						undone and all tasks in this board will be deleted.
 					</DialogDescription>
 				</DialogHeader>
 				<DialogFooter className="gap-2 sm:gap-0">
-					<Button
-						variant="outline"
-						onClick={onClose}
-						disabled={isLoading}
-					>
+					<Button variant="outline" onClick={onClose} disabled={isLoading}>
 						Cancel
 					</Button>
 					<Button

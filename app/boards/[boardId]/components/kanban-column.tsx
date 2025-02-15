@@ -41,40 +41,34 @@ export default function KanbanColumn({ column }: Props) {
 	const getColumnIcon = (id: string) => {
 		switch (id) {
 			case "backlog":
-				return <FolderIcon className="h-5 w-5 mr-2 text-blue-500" />;
+				return <FolderIcon className="mr-2 h-5 w-5 text-blue-500" />;
 			case "todo":
-				return (
-					<DocumentTextIcon className="h-5 w-5 mr-2 text-yellow-500" />
-				);
+				return <DocumentTextIcon className="mr-2 h-5 w-5 text-yellow-500" />;
 			case "in-progress":
-				return (
-					<ArrowPathIcon className="h-5 w-5 mr-2 text-orange-500" />
-				);
+				return <ArrowPathIcon className="mr-2 h-5 w-5 text-orange-500" />;
 			case "done":
-				return (
-					<CheckCircleIcon className="h-5 w-5 mr-2 text-green-500" />
-				);
+				return <CheckCircleIcon className="mr-2 h-5 w-5 text-green-500" />;
 			default:
-				return <TagIcon className="h-5 w-5 mr-2 text-gray-500" />;
+				return <TagIcon className="mr-2 h-5 w-5 text-gray-500" />;
 		}
 	};
 
 	return (
 		<Card
 			className={cn(
-				"bg-background border-border/40 h-full flex flex-col",
+				"bg-background border-border/40 flex h-full flex-col",
 				isBacklog && "bg-muted/10"
 			)}
 		>
 			<CardHeader className="p-4">
-				<CardTitle className="text-sm font-medium flex items-center justify-between">
+				<CardTitle className="flex items-center justify-between text-sm font-medium">
 					<div className="flex items-center">
 						{getColumnIcon(column.id)}
 						<span>{column.title}</span>
 					</div>
 					<span
 						className={cn(
-							"px-2 py-1 rounded-full text-xs",
+							"rounded-full px-2 py-1 text-xs",
 							isBacklog
 								? "bg-secondary/50 text-secondary-foreground"
 								: "bg-muted/60 text-muted-foreground"
@@ -87,13 +81,9 @@ export default function KanbanColumn({ column }: Props) {
 			<CardContent
 				ref={setNodeRef}
 				className={cn(
-					"p-2 transition-colors flex-1 overflow-y-auto",
+					"flex-1 overflow-y-auto p-2 transition-colors",
 					"rounded-b-lg",
-					isOver
-						? "bg-blue-100/10"
-						: isBacklog
-						? "bg-muted/5"
-						: "bg-muted/30"
+					isOver ? "bg-blue-100/10" : isBacklog ? "bg-muted/5" : "bg-muted/30"
 				)}
 			>
 				<SortableContext
