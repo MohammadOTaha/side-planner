@@ -188,11 +188,13 @@ export default function BoardComponent({ board }: Props) {
 			<div className="flex items-center justify-between mb-6">
 				<ProjectHeader
 					title={board.name}
-					description={board.description || "Manage your tasks"}
-					onUpdateBoard={async (title, description) => {
+					description={board.description}
+					features={board.features}
+					onUpdateBoard={async (title, description, features) => {
 						await updateBoardAction(board.id, {
 							name: title,
 							description,
+							features,
 						});
 						loadTasks();
 					}}

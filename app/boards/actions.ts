@@ -28,9 +28,15 @@ export async function createBoardAction(data: Omit<NewBoard, "userId">) {
 	return board;
 }
 
+interface UpdateBoardData {
+	name?: string;
+	description?: string;
+	features?: string;
+}
+
 export async function updateBoardAction(
 	boardId: number,
-	data: Partial<NewBoard>
+	data: UpdateBoardData
 ) {
 	const user = await getUser();
 	if (!user) {

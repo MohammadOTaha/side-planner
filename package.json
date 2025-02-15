@@ -8,7 +8,9 @@
     "db:seed": "npx tsx lib/db/seed.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@ai-sdk/google": "^1.1.13",
@@ -60,5 +62,9 @@
     "timeago.js": "^4.0.2",
     "typescript": "^5.7.3",
     "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.1",
+    "prettier-plugin-tailwindcss": "^0.6.11"
   }
 }

@@ -139,7 +139,7 @@ export default function AddTaskDialog({
 					Add Task
 				</Button>
 			</DialogTrigger>
-			<DialogContent className="sm:max-w-[600px] border border-gray-800">
+			<DialogContent className="sm:max-w-[600px]">
 				<form onSubmit={handleSubmit}>
 					<DialogHeader>
 						<DialogTitle>Create Task</DialogTitle>
