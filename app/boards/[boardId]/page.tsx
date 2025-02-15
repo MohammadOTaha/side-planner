@@ -16,7 +16,7 @@ export default async function BoardPage({ params }: Props) {
 		redirect("/login");
 	}
 
-	const { boardId } = await params;
+	const { boardId } = params;
 
 	const board = await getBoard(parseInt(boardId), user.id);
 	if (!board) {
@@ -24,31 +24,27 @@ export default async function BoardPage({ params }: Props) {
 	}
 
 	return (
-		<div className="h-full flex-1 flex flex-col gap-8 p-8">
-			<div className="flex-1 space-y-4">
-				<div className="container mx-auto">
-					<Suspense
-						fallback={
-							<div className="space-y-4">
-								<div className="space-y-2">
-									<Skeleton className="h-8 w-[200px]" />
-									<Skeleton className="h-4 w-[300px]" />
-								</div>
-								<div className="grid grid-cols-4 gap-6">
-									{[...Array(4)].map((_, i) => (
-										<Skeleton
-											key={i}
-											className="h-[500px] w-full"
-										/>
-									))}
-								</div>
-							</div>
-						}
-					>
-						<BoardComponent board={board} />
-					</Suspense>
-				</div>
-			</div>
+		<div className="container mx-auto flex-1 space-y-6 py-6">
+			<Suspense
+				fallback={
+					<div className="space-y-4">
+						<div className="space-y-2">
+							<Skeleton className="h-8 w-[200px]" />
+							<Skeleton className="h-4 w-[300px]" />
+						</div>
+						<div className="grid grid-cols-4 gap-6">
+							{[...Array(4)].map((_, i) => (
+								<Skeleton
+									key={i}
+									className="h-[500px] w-full"
+								/>
+							))}
+						</div>
+					</div>
+				}
+			>
+				<BoardComponent board={board} />
+			</Suspense>
 		</div>
 	);
 }
