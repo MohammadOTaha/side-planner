@@ -19,7 +19,6 @@ import {
 	ArrowDown,
 	ArrowRight,
 	ArrowUp,
-	DotIcon,
 } from "lucide-react";
 import { type Board } from "@/lib/db/schema";
 import {
@@ -150,17 +149,22 @@ export default function AddTaskDialog({
 							</DialogDescription>
 						)}
 					</DialogHeader>
-					<div className="space-y-4 py-4">
+					<div className="py-2">
 						{!isAiMode ? (
-							<div className="space-y-2">
-								<Input
-									id="title"
-									value={title}
-									onChange={(e) => setTitle(e.target.value)}
-									placeholder="What do you want to get done?"
-								/>
+							<div className="space-y-4">
+								<div className="flex flex-col space-y-2 mt-4">
+									<Label htmlFor="title">Title</Label>
+									<Input
+										id="title"
+										value={title}
+										onChange={(e) =>
+											setTitle(e.target.value)
+										}
+										placeholder="What do you want to get done?"
+									/>
+								</div>
 								<div className="grid grid-cols-2 gap-4">
-									<div>
+									<div className="flex flex-col space-y-2">
 										<Label htmlFor="complexity">
 											Complexity
 										</Label>
@@ -174,26 +178,26 @@ export default function AddTaskDialog({
 											<SelectContent>
 												<SelectItem value="easy">
 													<div className="flex items-center">
-														<DotIcon className="w-4 h-4 mr-2 text-green-500" />
+														<div className="w-2 h-2 rounded-full bg-emerald-500 mr-2" />
 														Easy
 													</div>
 												</SelectItem>
 												<SelectItem value="medium">
 													<div className="flex items-center">
-														<DotIcon className="w-4 h-4 mr-2 text-yellow-500" />
+														<div className="w-2 h-2 rounded-full bg-amber-500 mr-2" />
 														Medium
 													</div>
 												</SelectItem>
 												<SelectItem value="hard">
 													<div className="flex items-center">
-														<DotIcon className="w-4 h-4 mr-2 text-red-500" />
+														<div className="w-2 h-2 rounded-full bg-rose-500 mr-2" />
 														Hard
 													</div>
 												</SelectItem>
 											</SelectContent>
 										</Select>
 									</div>
-									<div>
+									<div className="flex flex-col space-y-2">
 										<Label htmlFor="priority">
 											Priority
 										</Label>
