@@ -1,7 +1,7 @@
-import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getUser, getUserBoards } from "@/lib/db/queries";
 import { redirect } from "next/navigation";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Suspense } from "react";
 import BoardsComponent from "./components/boards-component";
 
 export default async function BoardsPage() {

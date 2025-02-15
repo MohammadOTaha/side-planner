@@ -416,7 +416,9 @@ export const inviteTeamMember = validatedActionWithUser(
 			.limit(1);
 
 		if (existingInvitation.length > 0) {
-			return { error: "An invitation has already been sent to this email" };
+			return {
+				error: "An invitation has already been sent to this email",
+			};
 		}
 
 		// Create a new invitation
