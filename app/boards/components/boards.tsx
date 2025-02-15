@@ -16,7 +16,6 @@ interface Props {
 
 export default function BoardsComponent({ initialBoards }: Props) {
 	const [boards, setBoards] = useState<Board[]>(initialBoards);
-	const [editingBoard, setEditingBoard] = useState<Board | null>(null);
 	const [deletingBoard, setDeletingBoard] = useState<Board | null>(null);
 
 	const handleBoardCreated = (newBoard: Board) => {
@@ -27,7 +26,6 @@ export default function BoardsComponent({ initialBoards }: Props) {
 		setBoards((prev) =>
 			prev.map((board) => (board.id === updatedBoard.id ? updatedBoard : board))
 		);
-		setEditingBoard(null);
 	};
 
 	const handleBoardDeleted = (boardId: number) => {
@@ -98,9 +96,6 @@ export default function BoardsComponent({ initialBoards }: Props) {
 											variant="ghost"
 											size="icon"
 											className="bg-background/80 h-8 w-8 rounded-full backdrop-blur-sm"
-											onClick={(e) => {
-												e.preventDefault();
-											}}
 										>
 											<Pencil className="h-4 w-4" />
 										</Button>

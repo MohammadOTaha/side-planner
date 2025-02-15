@@ -37,6 +37,16 @@ export default function ProjectDialog({
 	const [newFeature, setNewFeature] = useState("");
 	const [showFeatureInput, setShowFeatureInput] = useState(false);
 
+	// Reset form state when dialog opens
+	const handleOpenChange = (newOpen: boolean) => {
+		setOpen(newOpen);
+		if (newOpen) {
+			setTitle(board?.name || "");
+			setOverview(board?.description || "");
+			setFeatures((board?.features || "").split("\n").filter(Boolean));
+		}
+	};
+
 	const handleAddFeature = () => {
 		if (newFeature.trim()) {
 			setFeatures([...features, newFeature.trim()]);
@@ -61,7 +71,7 @@ export default function ProjectDialog({
 	};
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogTrigger asChild>
 				{trigger || (
 					<Button variant="outline">
