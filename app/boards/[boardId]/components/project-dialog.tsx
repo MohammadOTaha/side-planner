@@ -130,7 +130,7 @@ export default function ProjectDialog({
 									<Plus className="h-4 w-4" />
 								</Button>
 							</div>
-							<div className="border-border/40 mt-2 max-h-[200px] space-y-2 overflow-y-auto rounded-md border p-2">
+							<div className={`mt-2 max-h-[200px] space-y-2 overflow-y-auto rounded-md ${(features.length > 0 || showFeatureInput) ? 'border border-border/40 p-2' : ''}`}>
 								<div className="flex flex-col gap-2">
 									{showFeatureInput && (
 										<div className="flex gap-2">
