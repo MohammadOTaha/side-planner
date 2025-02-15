@@ -34,12 +34,12 @@ export default function ProjectHeader({
 
 	if (isEditing) {
 		return (
-			<div className="space-y-3">
+			<div className="space-y-3 w-full max-w-2xl">
 				<div className="flex items-center gap-2">
 					<Input
 						value={editedTitle}
 						onChange={(e) => setEditedTitle(e.target.value)}
-						className="text-2xl font-semibold h-auto py-1"
+						className="text-2xl font-semibold h-auto py-1.5 w-full"
 						placeholder="Enter title"
 					/>
 					<Button size="sm" onClick={handleSave} className="h-8">
@@ -49,9 +49,9 @@ export default function ProjectHeader({
 				<Textarea
 					value={editedDescription}
 					onChange={(e) => setEditedDescription(e.target.value)}
-					className="text-sm resize-none"
+					className="text-sm resize-none w-full min-h-[80px]"
 					placeholder="Enter description"
-					rows={2}
+					rows={3}
 				/>
 			</div>
 		);
@@ -93,7 +93,7 @@ export default function ProjectHeader({
 					className={cn(
 						"text-sm text-muted-foreground transition-all duration-200",
 						showDescription
-							? "opacity-100 max-h-20"
+							? "opacity-100 max-h-20 mb-4"
 							: "opacity-0 max-h-0 overflow-hidden"
 					)}
 				>
