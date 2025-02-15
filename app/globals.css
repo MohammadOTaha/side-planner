@@ -268,3 +268,12 @@
 .animate-glow {
 	animation: glow 1.5s infinite ease-in-out;
 }
+
+@keyframes sweep {
+	0% {
+		transform: translateY(-100%);
+	}
+	100% {
+		transform: translateY(100%);
+	}
+}

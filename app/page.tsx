@@ -1,7 +1,7 @@
 "use client";
 
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Button } from "@/components/ui/button";
+import { LandingButton } from "@/components/ui/landing-button";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
@@ -38,14 +38,19 @@ export default function LandingPage() {
 					priority
 					className="mb-12"
 				/>
-				<h1 className="mb-6 text-5xl font-bold">Welcome to SidePlanner</h1>
+				<h1 className="mb-6 text-5xl font-bold">
+					Welcome to{" "}
+					<span className="animate-[pulse_3s_ease-in-out_infinite] bg-gradient-to-b from-gray-800 to-gray-50 bg-clip-text font-extrabold text-transparent">
+						SidePlanner
+					</span>
+				</h1>
 				<p className="text-muted-foreground mb-10 max-w-2xl text-xl">
 					Your AI-powered personal project management solution
 				</p>
 				<Link href="/boards">
-					<Button size="lg" className="px-8 py-6 text-lg">
-						Get Started with Boards
-					</Button>
+					<LandingButton size="lg" className="py-7 text-lg tracking-wide">
+						Get Started with <span className="font-black">Boards</span>
+					</LandingButton>
 				</Link>
 			</div>
 		</div>
