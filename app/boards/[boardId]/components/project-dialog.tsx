@@ -16,17 +16,23 @@ import { Plus, X } from "lucide-react";
 import { useState } from "react";
 
 interface Props {
-	board: Board;
-	onUpdate: (title: string, description: string, features: string) => void;
+	board?: Partial<Board>;
+	onSubmit: (title: string, description: string, features: string) => void;
 	trigger?: React.ReactNode;
+	mode?: "add" | "edit";
 }
 
-export default function EditProjectDialog({ board, onUpdate, trigger }: Props) {
+export default function ProjectDialog({
+	board,
+	onSubmit,
+	trigger,
+	mode = "edit",
+}: Props) {
 	const [open, setOpen] = useState(false);
-	const [title, setTitle] = useState(board.name);
-	const [overview, setOverview] = useState(board.description || "");
+	const [title, setTitle] = useState(board?.name || "");
+	const [overview, setOverview] = useState(board?.description || "");
 	const [features, setFeatures] = useState<string[]>(
-		(board.features || "").split("\n").filter(Boolean)
+		(board?.features || "").split("\n").filter(Boolean)
 	);
 	const [newFeature, setNewFeature] = useState("");
 	const [showFeatureInput, setShowFeatureInput] = useState(false);
@@ -45,20 +51,41 @@ export default function EditProjectDialog({ board, onUpdate, trigger }: Props) {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		onUpdate(title, overview, features.join("\n"));
+		onSubmit(title, overview, features.join("\n"));
 		setOpen(false);
+		if (mode === "add") {
+			setTitle("");
+			setOverview("");
+			setFeatures([]);
+		}
 	};
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				{trigger || <Button variant="outline">Edit Project</Button>}
+				{trigger || (
+					<Button variant="outline">
+						{mode === "add" ? "Add Board" : "Edit Board"}
+					</Button>
+				)}
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[600px]">
 				<form onSubmit={handleSubmit}>
 					<DialogHeader>
-						<DialogTitle>Edit Project</DialogTitle>
-						<DialogDescription>Update your project details</DialogDescription>
+						<DialogTitle>
+							{mode === "add" ? "Create New Board" : "Edit Board"}
+						</DialogTitle>
+						<DialogDescription>
+							{mode === "add"
+								? "Create a new board to organize your tasks."
+								: "Add project details for"}
+							{mode === "edit" && (
+								<span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text font-bold text-transparent">
+									{" "}
+									AI Planning
+								</span>
+							)}
+						</DialogDescription>
 					</DialogHeader>
 					<div className="space-y-4 py-4">
 						<div>
@@ -95,7 +122,7 @@ export default function EditProjectDialog({ board, onUpdate, trigger }: Props) {
 							</div>
 							<div className="border-border/40 mt-2 max-h-[200px] space-y-2 overflow-y-auto rounded-md border p-2">
 								<div className="flex flex-col gap-2">
-										{showFeatureInput && (
+									{showFeatureInput && (
 										<div className="flex gap-2">
 											<Input
 												id="features"
@@ -141,7 +168,9 @@ export default function EditProjectDialog({ board, onUpdate, trigger }: Props) {
 						</div>
 					</div>
 					<DialogFooter>
-						<Button type="submit">Save changes</Button>
+						<Button type="submit">
+							{mode === "add" ? "Create Board" : "Save Changes"}
+						</Button>
 					</DialogFooter>
 				</form>
 			</DialogContent>

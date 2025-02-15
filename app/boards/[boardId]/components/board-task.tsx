@@ -1,22 +1,22 @@
 "use client";
 
+import { Card } from "@/components/ui/card";
+import { type Task } from "@/lib/db/schema";
+import { cn } from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import { type Task } from "@/lib/db/schema";
-import { format } from "timeago.js";
 import { ArrowDown, ArrowRight, ArrowUp } from "lucide-react";
+import { format } from "timeago.js";
 
-interface KanbanTask extends Omit<Task, "id"> {
+interface DraggableTask extends Omit<Task, "id"> {
 	id: string; // For DnD we need string IDs
 }
 
 interface Props {
-	task: KanbanTask;
+	task: DraggableTask;
 }
 
-export default function KanbanTask({ task }: Props) {
+export default function BoardTask({ task }: Props) {
 	const {
 		attributes,
 		listeners,

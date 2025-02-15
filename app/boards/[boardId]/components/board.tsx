@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import {
+	updateBoardAction,
+	updateTaskStatusAction,
+} from "@/app/boards/actions";
+import { Card } from "@/components/ui/card";
+import { getBoardTasks } from "@/lib/db/queries";
+import { type Board, type Task } from "@/lib/db/schema";
 import {
 	DndContext,
 	DragOverlay,
@@ -10,25 +16,19 @@ import {
 	useSensors,
 } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
-import KanbanColumn from "./kanban-column";
-import { Card } from "@/components/ui/card";
-import ProjectHeader from "./project-header";
-import { type Board, type Task } from "@/lib/db/schema";
-import {
-	updateBoardAction,
-	updateTaskStatusAction,
-} from "@/app/boards/actions";
-import { getBoardTasks } from "@/lib/db/queries";
+import { useCallback, useEffect, useState } from "react";
 import AddTaskDialog from "./add-task-dialog";
+import BoardColumn from "./board-column";
+import ProjectHeader from "./project-header";
 
-interface KanbanTask extends Omit<Task, "id"> {
+interface BoardTask extends Omit<Task, "id"> {
 	id: string; // For DnD we need string IDs
 }
 
 interface Column {
 	id: string;
 	title: string;
-	tasks: KanbanTask[];
+	tasks: BoardTask[];
 }
 
 interface Props {
@@ -58,8 +58,8 @@ const INITIAL_COLUMNS: Column[] = [
 	},
 ];
 
-export default function BoardComponent({ board }: Props) {
-	const [activeTask, setActiveTask] = useState<KanbanTask | null>(null);
+export default function Board({ board }: Props) {
+	const [activeTask, setActiveTask] = useState<BoardTask | null>(null);
 	const [columns, setColumns] = useState<Column[]>(INITIAL_COLUMNS);
 
 	const loadTasks = useCallback(async () => {
@@ -218,7 +218,7 @@ export default function BoardComponent({ board }: Props) {
 					{/* Backlog Column */}
 					<div className="w-80 overflow-y-auto">
 						<SortableContext items={[columns[0].id]}>
-							<KanbanColumn column={columns[0]} />
+							<BoardColumn column={columns[0]} />
 						</SortableContext>
 					</div>
 
@@ -230,7 +230,7 @@ export default function BoardComponent({ board }: Props) {
 						<SortableContext items={columns.slice(1).map((col) => col.id)}>
 							{columns.slice(1).map((column) => (
 								<div key={column.id} className="overflow-y-auto">
-									<KanbanColumn column={column} />
+									<BoardColumn column={column} />
 								</div>
 							))}
 						</SortableContext>

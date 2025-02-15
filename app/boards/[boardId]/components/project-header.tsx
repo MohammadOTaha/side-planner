@@ -1,12 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { ChevronDown, ChevronUp, Pencil, Save } from "lucide-react";
-import { cn } from "@/lib/utils";
-import EditProjectDialog from "./edit-project-dialog";
+import { Pencil } from "lucide-react";
+import EditProjectDialog from "./project-dialog";
 
 interface Props {
 	title: string;
@@ -38,7 +34,7 @@ export default function ProjectHeader({
 								features: features || "",
 							} as any
 						}
-						onUpdate={onUpdateBoard || (() => {})}
+						onSubmit={onUpdateBoard || (() => {})}
 						trigger={
 							<Button
 								variant="ghost"

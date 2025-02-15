@@ -1,22 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import { type Board } from "@/lib/db/schema";
+import { Button } from "@/components/ui/button";
 import {
 	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
 	CardHeader,
 	CardTitle,
-	CardDescription,
-	CardContent,
-	CardFooter,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Plus, Pencil, Trash2, Layout } from "lucide-react";
-import Link from "next/link";
-import AddBoardDialog from "./add-board-dialog";
-import EditBoardDialog from "./edit-board-dialog";
-import DeleteBoardDialog from "./delete-board-dialog";
+import { type Board } from "@/lib/db/schema";
 import { format } from "date-fns";
+import { Layout, Pencil, Plus, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import ProjectDialog from "../[boardId]/components/project-dialog";
+import { createBoardAction, updateBoardAction } from "../actions";
+import DeleteBoardDialog from "./delete-board-dialog";
 
 interface Props {
 	initialBoards: Board[];
@@ -52,12 +52,23 @@ export default function BoardsComponent({ initialBoards }: Props) {
 						Create and manage your kanban boards
 					</p>
 				</div>
-				<AddBoardDialog onBoardCreated={handleBoardCreated}>
-					<Button size="sm">
-						<Plus className="mr-2 h-4 w-4" />
-						New Board
-					</Button>
-				</AddBoardDialog>
+				<ProjectDialog
+					mode="add"
+					onSubmit={async (name, description, features) => {
+						const board = await createBoardAction({
+							name,
+							description,
+							features,
+						});
+						handleBoardCreated(board);
+					}}
+					trigger={
+						<Button size="sm">
+							<Plus className="mr-2 h-4 w-4" />
+							New Board
+						</Button>
+					}
+				/>
 			</div>
 
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -85,17 +96,30 @@ export default function BoardsComponent({ initialBoards }: Props) {
 
 						<CardFooter className="absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100">
 							<div className="flex gap-1">
-								<Button
-									variant="ghost"
-									size="icon"
-									className="h-8 w-8"
-									onClick={(e) => {
-										e.preventDefault();
-										setEditingBoard(board);
+								<ProjectDialog
+									mode="edit"
+									board={board}
+									onSubmit={async (name, description, features) => {
+										const updatedBoard = await updateBoardAction(board.id, {
+											name,
+											description,
+											features,
+										});
+										handleBoardUpdated(updatedBoard);
 									}}
-								>
-									<Pencil className="h-4 w-4" />
-								</Button>
+									trigger={
+										<Button
+											variant="ghost"
+											size="icon"
+											className="h-8 w-8"
+											onClick={(e) => {
+												e.preventDefault();
+											}}
+										>
+											<Pencil className="h-4 w-4" />
+										</Button>
+									}
+								/>
 								<Button
 									variant="ghost"
 									size="icon"
@@ -112,24 +136,26 @@ export default function BoardsComponent({ initialBoards }: Props) {
 					</Card>
 				))}
 
-				<AddBoardDialog onBoardCreated={handleBoardCreated}>
-					<Card className="hover:border-primary hover:bg-primary/5 flex h-[200px] cursor-pointer items-center justify-center border-2 border-dashed transition-colors">
-						<div className="text-muted-foreground flex flex-col items-center gap-2">
-							<Plus className="h-8 w-8" />
-							<p className="text-sm font-medium">Create New Board</p>
-						</div>
-					</Card>
-				</AddBoardDialog>
-			</div>
-
-			{/* Edit dialog */}
-			{editingBoard && (
-				<EditBoardDialog
-					board={editingBoard}
-					onBoardUpdated={handleBoardUpdated}
-					onClose={() => setEditingBoard(null)}
+				<ProjectDialog
+					mode="add"
+					onSubmit={async (name, description, features) => {
+						const board = await createBoardAction({
+							name,
+							description,
+							features,
+						});
+						handleBoardCreated(board);
+					}}
+					trigger={
+						<Card className="hover:border-primary hover:bg-primary/5 flex h-[200px] cursor-pointer items-center justify-center border-2 border-dashed transition-colors">
+							<div className="text-muted-foreground flex flex-col items-center gap-2">
+								<Plus className="h-8 w-8" />
+								<p className="text-sm font-medium">Create New Board</p>
+							</div>
+						</Card>
+					}
 				/>
-			)}
+			</div>
 
 			{/* Delete dialog */}
 			{deletingBoard && (

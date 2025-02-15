@@ -1,37 +1,37 @@
 "use client";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { type Task } from "@/lib/db/schema";
+import { cn } from "@/lib/utils";
 import { useDroppable } from "@dnd-kit/core";
 import {
 	SortableContext,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import KanbanTask from "./kanban-task";
-import { cn } from "@/lib/utils";
-import { type Task } from "@/lib/db/schema";
 import {
-	FolderIcon,
-	DocumentTextIcon,
 	ArrowPathIcon,
 	CheckCircleIcon,
+	DocumentTextIcon,
+	FolderIcon,
 	TagIcon,
 } from "@heroicons/react/24/outline";
+import DraggableTask from "./board-task";
 
-interface KanbanTask extends Omit<Task, "id"> {
+interface DraggableTask extends Omit<Task, "id"> {
 	id: string; // For DnD we need string IDs
 }
 
 interface Column {
 	id: string;
 	title: string;
-	tasks: KanbanTask[];
+	tasks: DraggableTask[];
 }
 
 interface Props {
 	column: Column;
 }
 
-export default function KanbanColumn({ column }: Props) {
+export default function BoardColumn({ column }: Props) {
 	const { setNodeRef, isOver } = useDroppable({
 		id: column.id,
 	});
@@ -92,7 +92,7 @@ export default function KanbanColumn({ column }: Props) {
 				>
 					<div className="flex flex-col gap-3">
 						{column.tasks.map((task) => (
-							<KanbanTask key={task.id} task={task} />
+							<DraggableTask key={task.id} task={task} />
 						))}
 					</div>
 				</SortableContext>

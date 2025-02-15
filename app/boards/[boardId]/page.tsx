@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getBoard, getUser } from "@/lib/db/queries";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import BoardComponent from "./components/board-component";
+import Board from "./components/board";
 
 interface Props {
 	params: {
@@ -40,7 +40,7 @@ export default async function BoardPage({ params }: Props) {
 					</div>
 				}
 			>
-				<BoardComponent board={board} />
+				<Board board={board} />
 			</Suspense>
 		</div>
 	);
