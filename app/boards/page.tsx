@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getUser, getUserBoards } from "@/lib/db/queries";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import BoardsComponent from "./components/boards-component";
+import BoardsComponent from "./components/boards";
 
 export default async function BoardsPage() {
 	const user = await getUser();

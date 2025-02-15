@@ -1,16 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Board } from "@/lib/db/schema";
-import { format } from "date-fns";
 import { Layout, Pencil, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -75,26 +67,20 @@ export default function BoardsComponent({ initialBoards }: Props) {
 				{boards.map((board) => (
 					<Card
 						key={board.id}
-						className="group hover:border-primary/50 relative transition-all duration-200 hover:shadow-lg"
+						className="group from-background to-muted/30 relative overflow-hidden border-none bg-gradient-to-br shadow-md transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
 					>
-						<Link href={`/boards/${board.id}`}>
-							<CardHeader>
-								<CardTitle className="flex items-center gap-2">
-									<Layout className="text-primary h-5 w-5" />
-									{board.name}
+						<Link href={`/boards/${board.id}`} className="block h-full">
+							<CardHeader className="flex h-full items-center justify-center p-6">
+								<CardTitle className="flex flex-col items-center gap-4 text-xl">
+									<div className="bg-primary/10 rounded-md p-3">
+										<Layout className="text-primary h-6 w-6" />
+									</div>
+									<span>{board.name}</span>
 								</CardTitle>
-								{board.description && (
-									<CardDescription className="line-clamp-2">
-										{board.description}
-									</CardDescription>
-								)}
 							</CardHeader>
-							<CardContent className="text-muted-foreground text-sm">
-								Created {format(new Date(board.createdAt), "PP")}
-							</CardContent>
 						</Link>
 
-						<CardFooter className="absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100">
+						<CardContent className="absolute top-4 right-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
 							<div className="flex gap-1">
 								<ProjectDialog
 									mode="edit"
@@ -111,7 +97,7 @@ export default function BoardsComponent({ initialBoards }: Props) {
 										<Button
 											variant="ghost"
 											size="icon"
-											className="h-8 w-8"
+											className="bg-background/80 h-8 w-8 rounded-full backdrop-blur-sm"
 											onClick={(e) => {
 												e.preventDefault();
 											}}
@@ -123,7 +109,7 @@ export default function BoardsComponent({ initialBoards }: Props) {
 								<Button
 									variant="ghost"
 									size="icon"
-									className="h-8 w-8"
+									className="bg-background/80 h-8 w-8 rounded-full backdrop-blur-sm"
 									onClick={(e) => {
 										e.preventDefault();
 										setDeletingBoard(board);
@@ -132,7 +118,7 @@ export default function BoardsComponent({ initialBoards }: Props) {
 									<Trash2 className="h-4 w-4" />
 								</Button>
 							</div>
-						</CardFooter>
+						</CardContent>
 					</Card>
 				))}
 
@@ -147,9 +133,9 @@ export default function BoardsComponent({ initialBoards }: Props) {
 						handleBoardCreated(board);
 					}}
 					trigger={
-						<Card className="hover:border-primary hover:bg-primary/5 flex h-[200px] cursor-pointer items-center justify-center border-2 border-dashed transition-colors">
-							<div className="text-muted-foreground flex flex-col items-center gap-2">
-								<Plus className="h-8 w-8" />
+						<Card className="group from-background to-muted/30 hover:border-primary/50 flex h-[140px] cursor-pointer items-center justify-center border-2 border-dashed bg-gradient-to-br transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+							<div className="text-muted-foreground group-hover:text-primary flex flex-col items-center gap-3 transition-colors">
+								<Plus className="h-6 w-6" />
 								<p className="text-sm font-medium">Create New Board</p>
 							</div>
 						</Card>
