@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LayoutGrid, LayoutList, Plus, Settings } from "lucide-react";
@@ -10,6 +12,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 export default function BoardsNavbar() {
 	const pathname = usePathname();
 	const isRootBoardsPath = pathname === "/boards";
+	const { theme } = useTheme();
 
 	return (
 		<header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -19,9 +22,19 @@ export default function BoardsNavbar() {
 						<div className="flex items-center space-x-6">
 							<Link
 								href="/boards"
-								className="font-medium transition-colors hover:text-foreground/80"
+								className="flex items-center space-x-2"
 							>
-								Boards
+								<Image
+									src={
+										theme === "dark"
+											? "/SidePlanner-bow.png"
+											: "/SidePlanner-wob.png"
+									}
+									alt="SidePlanner Logo"
+									width={72}
+									height={72}
+									className="object-contain"
+								/>
 							</Link>
 							<div className="flex items-center space-x-2">
 								<Link href="/boards">

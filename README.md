@@ -1,5 +1,7 @@
 # SidePlanner
 
+![SidePlanner](public/SidePlanner-bow.png)
+
 ### Core Description:
 
 A web-based personal project management application that combines traditional task board functionality with AI assistance for intelligent project planning. The system helps individuals organize their development workflow while leveraging AI to suggest related tasks, identify dependencies, and improve project planning efficiency.
