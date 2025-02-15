@@ -4,6 +4,8 @@
 
 A web-based personal side projects management application that combines traditional task board functionality with AI assistance for intelligent project planning. The system helps individuals organize their development workflow while leveraging AI to suggest sub and related tasks.
 
+![alt text](image.png)
+
 > **AI Model Used**: gemini-2.0-flash-exp (get a free API key [here](https://aistudio.google.com/apikey))
 
 > If you want to update the prompt to fit your use case, you can do so in the [route.ts](app/api/ai/route.ts) file.

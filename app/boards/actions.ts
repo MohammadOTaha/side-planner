@@ -88,7 +88,6 @@ export async function deleteTaskAction(taskId: number, boardId: number) {
 	}
 
 	await deleteTask(taskId, boardId);
-	revalidatePath(`/boards/${boardId}`);
 }
 
 interface AITaskSuggestion {
