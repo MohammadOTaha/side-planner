@@ -1,20 +1,26 @@
-import { generateObject } from "ai";
 import { google } from "@ai-sdk/google";
+import { generateObject } from "ai";
 import { z } from "zod";
 
 export async function POST(req: Request) {
-	const { projectName, projectDescription, taskDescription, existingTasks } =
-		await req.json();
+	const {
+		projectName,
+		projectDescription,
+		projectFeatures,
+		taskDescription,
+		existingTasks,
+	} = await req.json();
 
 	const result = await generateObject({
 		model: google("gemini-2.0-flash-exp"),
 		system: `
         You are a senior software engineer and project manager with extensive experience in breaking down projects into well-organized tasks and subtasks. 
-        Your role is to analyze project requirements and generate list of related subtasks.
+        Your role is to analyze project requirements and generate a list of related subtasks.
         `,
 		prompt: `
         Project Name: ${projectName}
         Project Description: ${projectDescription}
+		Project Features: ${projectFeatures}
         Existing Tasks: ${existingTasks}
 
         Task Description: ${taskDescription}

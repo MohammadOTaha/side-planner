@@ -1,17 +1,16 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import {
 	createBoard,
-	updateBoard,
-	deleteBoard,
-	getUser,
 	createTask,
-	updateTask,
+	deleteBoard,
 	deleteTask,
+	getUser,
+	updateBoard,
 	updateTaskStatus,
 } from "@/lib/db/queries";
 import { NewTask, type NewBoard } from "@/lib/db/schema";
+import { revalidatePath } from "next/cache";
 
 export async function createBoardAction(data: Omit<NewBoard, "userId">) {
 	const user = await getUser();
@@ -101,6 +100,7 @@ interface AITaskSuggestion {
 export async function getAITaskSuggestionsAction(
 	projectName: string,
 	projectDescription: string,
+	projectFeatures: string,
 	taskDescription: string,
 	existingTasks: string
 ): Promise<AITaskSuggestion[]> {
@@ -116,6 +116,7 @@ export async function getAITaskSuggestionsAction(
 		body: JSON.stringify({
 			projectName,
 			projectDescription,
+			projectFeatures,
 			taskDescription,
 			existingTasks,
 		}),

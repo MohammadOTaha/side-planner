@@ -1,7 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import {
+	createTaskAction,
+	getAITaskSuggestionsAction,
+} from "@/app/boards/actions";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
 	Dialog,
 	DialogContent,
@@ -11,23 +15,9 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import {
-	Plus,
-	Sparkles,
-	Check,
-	ArrowDown,
-	ArrowRight,
-	ArrowUp,
-} from "lucide-react";
-import { type Board } from "@/lib/db/schema";
-import {
-	createTaskAction,
-	getAITaskSuggestionsAction,
-} from "@/app/boards/actions";
 import { GlowButton } from "@/components/ui/glow-button";
-import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
 	Select,
 	SelectContent,
@@ -35,7 +25,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+import { type Board } from "@/lib/db/schema";
+import { cn } from "@/lib/utils";
+import { ArrowDown, ArrowRight, ArrowUp, Check, Plus } from "lucide-react";
+import { useState } from "react";
 
 interface Props {
 	board: Board;
@@ -110,6 +103,10 @@ export default function AddTaskDialog({
 			const suggestions = await getAITaskSuggestionsAction(
 				board.name,
 				board.description || "",
+				board.features
+					?.split("\n")
+					.map((feature) => `[${feature}]`)
+					.join(", ") || "",
 				title,
 				existingTasks || ""
 			);

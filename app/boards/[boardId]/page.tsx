@@ -1,8 +1,8 @@
-import { Suspense } from "react";
-import { getUser, getBoard } from "@/lib/db/queries";
-import { redirect } from "next/navigation";
-import BoardComponent from "./components/board-component";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getBoard, getUser } from "@/lib/db/queries";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import BoardComponent from "./components/board-component";
 
 interface Props {
 	params: {
@@ -16,7 +16,7 @@ export default async function BoardPage({ params }: Props) {
 		redirect("/login");
 	}
 
-	const { boardId } = params;
+	const { boardId } = await params;
 
 	const board = await getBoard(parseInt(boardId), user.id);
 	if (!board) {
