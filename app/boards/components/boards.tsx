@@ -6,8 +6,8 @@ import { type Board } from "@/lib/db/schema";
 import { Layout, Pencil, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import ProjectDialog from "../[boardId]/components/project-dialog";
 import { createBoardAction, updateBoardAction } from "../actions";
+import BoardDialog from "./board-dialog";
 import DeleteBoardDialog from "./delete-board-dialog";
 
 interface Props {
@@ -42,7 +42,7 @@ export default function BoardsComponent({ initialBoards }: Props) {
 						Create and manage your kanban boards
 					</p>
 				</div>
-				<ProjectDialog
+				<BoardDialog
 					mode="add"
 					onSubmit={async (name, description, features) => {
 						const board = await createBoardAction({
@@ -80,7 +80,7 @@ export default function BoardsComponent({ initialBoards }: Props) {
 
 						<CardContent className="absolute top-4 right-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
 							<div className="flex gap-1">
-								<ProjectDialog
+								<BoardDialog
 									mode="edit"
 									board={board}
 									onSubmit={async (name, description, features) => {
@@ -117,7 +117,7 @@ export default function BoardsComponent({ initialBoards }: Props) {
 					</Card>
 				))}
 
-				<ProjectDialog
+				<BoardDialog
 					mode="add"
 					onSubmit={async (name, description, features) => {
 						const board = await createBoardAction({

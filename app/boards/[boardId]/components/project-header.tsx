@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
-import EditProjectDialog from "./project-dialog";
+import EditProjectDialog from "../../components/board-dialog";
 
 interface Props {
 	title: string;
