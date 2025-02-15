@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Pencil, Save } from "lucide-react";
+import { ChevronDown, ChevronUp, Pencil, Save } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Props {
 	title: string;
@@ -22,6 +23,7 @@ export default function ProjectHeader({
 	const [editedDescription, setEditedDescription] = useState(
 		description || ""
 	);
+	const [showDescription, setShowDescription] = useState(true);
 
 	const handleSave = () => {
 		if (editedTitle.trim()) {
@@ -61,17 +63,42 @@ export default function ProjectHeader({
 				<h2 className="text-2xl font-semibold tracking-tight">
 					{title}
 				</h2>
-				<Button
-					variant="ghost"
-					size="sm"
-					onClick={() => setIsEditing(true)}
-					className="opacity-0 group-hover:opacity-100 transition h-8"
-				>
-					<Pencil className="h-4 w-4" />
-				</Button>
+				<div className="flex items-center gap-1">
+					<Button
+						variant="ghost"
+						size="sm"
+						onClick={() => setIsEditing(true)}
+						className="opacity-0 group-hover:opacity-100 transition h-8"
+					>
+						<Pencil className="h-4 w-4" />
+					</Button>
+					{description && (
+						<Button
+							variant="ghost"
+							size="sm"
+							onClick={() => setShowDescription(!showDescription)}
+							className="opacity-0 group-hover:opacity-100 transition h-8"
+						>
+							{showDescription ? (
+								<ChevronUp className="h-4 w-4" />
+							) : (
+								<ChevronDown className="h-4 w-4" />
+							)}
+						</Button>
+					)}
+				</div>
 			</div>
-			{description && (
-				<p className="text-sm text-muted-foreground">{description}</p>
+			{description && showDescription && (
+				<p
+					className={cn(
+						"text-sm text-muted-foreground transition-all duration-200",
+						showDescription
+							? "opacity-100 max-h-20"
+							: "opacity-0 max-h-0 overflow-hidden"
+					)}
+				>
+					{description}
+				</p>
 			)}
 		</div>
 	);
