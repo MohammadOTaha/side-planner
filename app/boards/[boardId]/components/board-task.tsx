@@ -44,8 +44,8 @@ export default function BoardTask({ task, onRemoved }: Props) {
 		switch (priority) {
 			case "low":
 				return (
-					<span className="rounded-full bg-blue-500/10 px-2 py-1">
-						<ArrowDown className="h-4 w-4 text-blue-600" />
+					<span className="rounded-full bg-emerald-500/10 px-2 py-1">
+						<ArrowDown className="h-4 w-4 text-emerald-600" />
 					</span>
 				);
 			case "medium":
