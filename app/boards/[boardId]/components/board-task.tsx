@@ -43,13 +43,29 @@ export default function BoardTask({ task, onRemoved }: Props) {
 	const getPriorityIcon = (priority: string) => {
 		switch (priority) {
 			case "low":
-				return <ArrowDown className="h-4 w-4 text-blue-500" />;
+				return (
+					<span className="rounded-full bg-blue-500/10 px-2 py-1">
+						<ArrowDown className="h-4 w-4 text-blue-600" />
+					</span>
+				);
 			case "medium":
-				return <ArrowRight className="h-4 w-4 text-yellow-500" />;
+				return (
+					<span className="rounded-full bg-amber-500/10 px-2 py-1">
+						<ArrowRight className="h-4 w-4 text-amber-600" />
+					</span>
+				);
 			case "high":
-				return <ArrowUp className="h-4 w-4 text-red-500" />;
+				return (
+					<span className="rounded-full bg-rose-500/10 px-2 py-1">
+						<ArrowUp className="h-4 w-4 text-rose-600" />
+					</span>
+				);
 			default:
-				return <ArrowRight className="h-4 w-4 text-yellow-500" />;
+				return (
+					<span className="rounded-full bg-amber-500/10 px-2 py-1">
+						<ArrowRight className="h-4 w-4 text-amber-600" />
+					</span>
+				);
 		}
 	};
 
@@ -78,8 +94,7 @@ export default function BoardTask({ task, onRemoved }: Props) {
 			{...listeners}
 		>
 			<div className="flex-1">
-				<div className="mb-2 flex items-center gap-2">
-					{getPriorityIcon(task.priority)}
+				<div className="mb-2">
 					<p className="text-sm font-medium break-words">{task.title}</p>
 				</div>
 			</div>
@@ -97,18 +112,22 @@ export default function BoardTask({ task, onRemoved }: Props) {
 					<span className="text-muted-foreground text-xs">
 						{format(task.createdAt)}
 					</span>
-					<span
-						className={cn(
-							"rounded-full px-2 py-1 text-xs font-medium",
-							task.complexity === "easy"
-								? "bg-emerald-500/10 text-emerald-600"
-								: task.complexity === "medium"
-									? "bg-amber-500/10 text-amber-600"
-									: "bg-rose-500/10 text-rose-600"
-						)}
-					>
-						{task.complexity.charAt(0).toUpperCase() + task.complexity.slice(1)}
-					</span>
+					<div className="flex items-center gap-1">
+						<span
+							className={cn(
+								"rounded-full px-2 py-1 text-xs font-medium",
+								task.complexity === "easy"
+									? "bg-emerald-500/10 text-emerald-600"
+									: task.complexity === "medium"
+										? "bg-amber-500/10 text-amber-600"
+										: "bg-rose-500/10 text-rose-600"
+							)}
+						>
+							{task.complexity.charAt(0).toUpperCase() +
+								task.complexity.slice(1)}
+						</span>
+						{getPriorityIcon(task.priority)}
+					</div>
 				</div>
 			</div>
 		</Card>
