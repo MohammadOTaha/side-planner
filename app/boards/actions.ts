@@ -7,6 +7,7 @@ import {
 	deleteTask,
 	getUser,
 	updateBoard,
+	updateTask,
 	updateTaskStatus,
 } from "@/lib/db/queries";
 import { NewTask, type NewBoard } from "@/lib/db/schema";
@@ -90,6 +91,21 @@ export async function deleteTaskAction(taskId: number, boardId: number) {
 	}
 
 	await deleteTask(taskId, boardId);
+}
+
+export async function updateTaskAction(
+	taskId: number,
+	boardId: number,
+	data: Partial<NewTask>
+) {
+	const user = await getUser();
+	if (!user) {
+		throw new Error("Not authenticated");
+	}
+
+	const task = await updateTask(taskId, boardId, data);
+	revalidatePath(`/boards/${boardId}`);
+	return task;
 }
 
 interface AITaskSuggestion {

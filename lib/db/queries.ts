@@ -179,16 +179,3 @@ export async function updateTaskStatus(
 
 	return task;
 }
-
-export async function updateTaskPriority(
-	taskId: number,
-	boardId: number,
-	priority: string
-) {
-	const [task] = await db
-		.update(tasks)
-		.set({ priority, updatedAt: new Date() })
-		.where(and(eq(tasks.id, taskId), eq(tasks.boardId, boardId)))
-		.returning();
-	return task;
-}

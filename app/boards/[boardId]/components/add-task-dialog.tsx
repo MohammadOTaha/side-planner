@@ -39,11 +39,11 @@ import {
 } from "@/lib/types/board";
 import { cn } from "@/lib/utils";
 import {
-	ArrowDown,
-	ArrowRight,
-	ArrowUp,
 	Check,
+	ChevronDown,
 	ChevronRight,
+	ChevronUp,
+	Minus,
 	Plus,
 } from "lucide-react";
 import { useState } from "react";
@@ -260,19 +260,19 @@ export default function AddTaskDialog({
 											<SelectContent>
 												<SelectItem value="low">
 													<div className="flex items-center">
-														<ArrowDown className="mr-2 h-4 w-4 text-blue-500" />
+														<ChevronDown className="mr-2 h-4 w-4 text-blue-500" />
 														Low
 													</div>
 												</SelectItem>
 												<SelectItem value="medium">
 													<div className="flex items-center">
-														<ArrowRight className="mr-2 h-4 w-4 text-yellow-500" />
+														<Minus className="mr-2 h-4 w-4 text-yellow-500" />
 														Medium
 													</div>
 												</SelectItem>
 												<SelectItem value="high">
 													<div className="flex items-center">
-														<ArrowUp className="mr-2 h-4 w-4 text-red-500" />
+														<ChevronUp className="mr-2 h-4 w-4 text-red-500" />
 														High
 													</div>
 												</SelectItem>

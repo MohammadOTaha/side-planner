@@ -302,7 +302,10 @@ export default function Board({ board }: BoardProps) {
 							items={columns[0].tasks.map((task) => task.id)}
 							strategy={verticalListSortingStrategy}
 						>
-							<BoardColumn column={columns[0]} />
+							<BoardColumn
+								column={columns[0]}
+								boardTasks={columns.flatMap((col) => col.tasks)}
+							/>
 						</SortableContext>
 					</div>
 
@@ -317,7 +320,10 @@ export default function Board({ board }: BoardProps) {
 									items={column.tasks.map((task) => task.id)}
 									strategy={verticalListSortingStrategy}
 								>
-									<BoardColumn column={column} />
+									<BoardColumn
+										column={column}
+										boardTasks={columns.flatMap((col) => col.tasks)}
+									/>
 								</SortableContext>
 							</div>
 						))}

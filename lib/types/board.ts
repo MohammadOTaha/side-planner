@@ -27,6 +27,7 @@ export interface BoardColumnProps {
 export interface BoardTaskProps {
 	task: DraggableTask;
 	onRemoved: (taskId: string) => void;
+	boardTasks?: DraggableTask[];
 }
 
 export interface ProjectHeaderProps {

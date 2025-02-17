@@ -3,14 +3,15 @@
 import { deleteTaskAction } from "@/app/boards/actions";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { type BoardTaskProps } from "@/lib/types/board";
+import { type BoardTaskProps, type DraggableTask } from "@/lib/types/board";
 import { cn } from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ArrowDown, ArrowRight, ArrowUp, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Minus, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { format } from "timeago.js";
+import EditTaskDialog from "./edit-task-dialog";
 
 function TaskMetadata({
 	complexity,
@@ -25,26 +26,26 @@ function TaskMetadata({
 		switch (priority) {
 			case "low":
 				return (
-					<span className="rounded-full bg-emerald-500/10 px-2 py-1">
-						<ArrowDown className="h-4 w-4 text-emerald-600" />
+					<span className="rounded-md bg-emerald-500/10 px-2 py-1">
+						<ChevronDown className="h-4 w-4 fill-emerald-600 text-emerald-600" />
 					</span>
 				);
 			case "medium":
 				return (
-					<span className="rounded-full bg-amber-500/10 px-2 py-1">
-						<ArrowRight className="h-4 w-4 text-amber-600" />
+					<span className="rounded-md bg-amber-500/10 px-2 py-1">
+						<Minus className="h-4 w-4 fill-amber-600 text-amber-600" />
 					</span>
 				);
 			case "high":
 				return (
-					<span className="rounded-full bg-rose-500/10 px-2 py-1">
-						<ArrowUp className="h-4 w-4 text-rose-600" />
+					<span className="rounded-md bg-rose-500/10 px-2 py-1">
+						<ChevronUp className="h-4 w-4 fill-rose-600 text-rose-600" />
 					</span>
 				);
 			default:
 				return (
-					<span className="rounded-full bg-amber-500/10 px-2 py-1">
-						<ArrowRight className="h-4 w-4 text-amber-600" />
+					<span className="rounded-md bg-amber-500/10 px-2 py-1">
+						<Minus className="h-4 w-4 fill-amber-600 text-amber-600" />
 					</span>
 				);
 		}
@@ -56,7 +57,7 @@ function TaskMetadata({
 			<div className="flex items-center gap-1">
 				<span
 					className={cn(
-						"rounded-full px-2 py-1 text-xs font-medium",
+						"rounded-md px-2 py-1 text-xs font-medium",
 						complexity === "easy"
 							? "bg-emerald-500/10 text-emerald-600"
 							: complexity === "medium"
@@ -88,7 +89,8 @@ function ParentTaskHeader({ title }: { title: string }) {
 export default function BoardTask({
 	task,
 	onRemoved,
-}: BoardTaskProps & { onRemoved?: () => void }) {
+	boardTasks,
+}: BoardTaskProps & { onRemoved?: () => void; boardTasks?: DraggableTask[] }) {
 	const [isDeleting, setIsDeleting] = useState(false);
 
 	const {
@@ -150,15 +152,39 @@ export default function BoardTask({
 							{task.title}
 						</p>
 						<div className="flex items-center justify-between gap-2">
-							<Button
-								variant="ghost"
-								size="icon"
-								className="hover:bg-destructive/90 hover:text-destructive-foreground h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-								onClick={handleDelete}
-								disabled={isDeleting}
-							>
-								<Trash2 className="h-3.5 w-3.5" />
-							</Button>
+							<div className="flex items-center gap-1">
+								<Button
+									variant="ghost"
+									size="icon"
+									className="hover:bg-destructive/90 hover:text-destructive-foreground h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+									onClick={handleDelete}
+									disabled={isDeleting}
+								>
+									<Trash2 className="h-3.5 w-3.5" />
+								</Button>
+								<EditTaskDialog
+									task={{
+										...task,
+										id: parseInt(task.id),
+										boardId: task.boardId,
+									}}
+									boardTasks={boardTasks?.map((t) => ({
+										...t,
+										id: parseInt(t.id),
+										boardId: t.boardId,
+									}))}
+									onTaskUpdated={onRemoved}
+									trigger={
+										<Button
+											variant="ghost"
+											size="icon"
+											className="hover:bg-primary/90 hover:text-primary-foreground h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+										>
+											<Pencil className="h-3.5 w-3.5" />
+										</Button>
+									}
+								/>
+							</div>
 							<TaskMetadata
 								complexity={task.complexity}
 								priority={task.priority}

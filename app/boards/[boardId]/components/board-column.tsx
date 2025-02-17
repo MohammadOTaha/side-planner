@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { type BoardColumnProps } from "@/lib/types/board";
+import { type BoardColumnProps, type DraggableTask } from "@/lib/types/board";
 import { cn } from "@/lib/utils";
 import { useDroppable } from "@dnd-kit/core";
 import {
@@ -15,9 +15,13 @@ import {
 	FolderIcon,
 	TagIcon,
 } from "@heroicons/react/24/outline";
-import DraggableTask from "./board-task";
+import BoardTask from "./board-task";
 
-export default function BoardColumn({ column }: BoardColumnProps) {
+interface Props extends BoardColumnProps {
+	boardTasks?: DraggableTask[];
+}
+
+export default function BoardColumn({ column, boardTasks }: Props) {
 	const { setNodeRef, isOver } = useDroppable({
 		id: column.id,
 		data: {
@@ -83,9 +87,10 @@ export default function BoardColumn({ column }: BoardColumnProps) {
 				>
 					<div className="sortable-task-container flex flex-col gap-3">
 						{column.tasks.map((task) => (
-							<DraggableTask
+							<BoardTask
 								key={task.id}
 								task={task}
+								boardTasks={boardTasks}
 								onRemoved={() => {
 									column.tasks = column.tasks.filter((t) => t.id !== task.id);
 								}}
