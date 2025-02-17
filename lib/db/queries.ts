@@ -103,11 +103,13 @@ export async function getTask(taskId: number, boardId: number) {
 }
 
 export async function getBoardTasks(boardId: number) {
-	return await db
-		.select()
-		.from(tasks)
-		.where(and(eq(tasks.boardId, boardId), isNull(tasks.deletedAt)))
-		.orderBy(desc(tasks.updatedAt));
+	return await db.query.tasks.findMany({
+		where: and(eq(tasks.boardId, boardId), isNull(tasks.deletedAt)),
+		orderBy: desc(tasks.updatedAt),
+		with: {
+			parent: true,
+		},
+	});
 }
 
 export async function updateTask(

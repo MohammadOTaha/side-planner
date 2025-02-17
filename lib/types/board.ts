@@ -3,6 +3,7 @@ import { type Board, type Task } from "@/lib/db/schema";
 // Base task interface that extends the DB Task type
 export interface DraggableTask extends Omit<Task, "id"> {
 	id: string; // For DnD we need string IDs
+	parent?: DraggableTask; // Parent task reference
 }
 
 // Column interface for board organization
@@ -14,7 +15,9 @@ export interface Column {
 
 // Props interfaces for components
 export interface BoardProps {
-	board: Board;
+	board: Board & {
+		tasks?: Task[];
+	};
 }
 
 export interface BoardColumnProps {
@@ -38,7 +41,9 @@ export interface ProjectHeaderProps {
 }
 
 export interface AddTaskDialogProps {
-	board: Board;
+	board: Board & {
+		tasks?: Task[];
+	};
 	onTaskCreated?: () => void;
 	existingTasks?: string;
 }

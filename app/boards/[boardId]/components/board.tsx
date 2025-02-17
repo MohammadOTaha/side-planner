@@ -61,6 +61,12 @@ export default function Board({ board }: BoardProps) {
 				.map((task) => ({
 					...task,
 					id: task.id.toString(), // Convert to string for DnD
+					parent: task.parent
+						? {
+								...task.parent,
+								id: task.parent.id.toString(),
+							}
+						: undefined,
 				})),
 		}));
 

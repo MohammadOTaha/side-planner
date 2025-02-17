@@ -25,6 +25,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { type Task } from "@/lib/db/schema";
 import {
 	type AddTaskDialogProps,
 	type AITaskSuggestion,
@@ -40,46 +41,34 @@ export default function AddTaskDialog({
 }: AddTaskDialogProps) {
 	const [open, setOpen] = useState(false);
 	const [title, setTitle] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
-	const [aiSuggestions, setAiSuggestions] = useState<AITaskSuggestion[]>([]);
-	const [selectedTasks, setSelectedTasks] = useState<Set<number>>(new Set());
-	const [isAiMode, setIsAiMode] = useState(false);
 	const [complexity, setComplexity] = useState("medium");
 	const [priority, setPriority] = useState("medium");
+	const [parentId, setParentId] = useState<number | null>(null);
+	const [isAiMode, setIsAiMode] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [suggestions, setSuggestions] = useState<AITaskSuggestion[]>([]);
+	const [selectedTasks, setSelectedTasks] = useState<Set<number>>(new Set());
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setIsLoading(true);
+		if (!title.trim()) return;
 
 		try {
-			if (isAiMode) {
-				// Create all selected AI tasks
-				for (const index of selectedTasks) {
-					const task = aiSuggestions[index];
-					await createTaskAction({
-						title: task.title,
-						boardId: board.id,
-						status: "backlog",
-						complexity: task.complexity.toLowerCase(),
-						priority,
-					});
-				}
-			} else {
-				await createTaskAction({
-					title,
-					boardId: board.id,
-					status: "backlog",
-					complexity,
-					priority,
-				});
-			}
-
-			setTitle("");
-			setOpen(false);
-			setIsAiMode(false);
-			setAiSuggestions([]);
-			setSelectedTasks(new Set());
+			setIsLoading(true);
+			await createTaskAction({
+				title: title.trim(),
+				boardId: board.id,
+				complexity,
+				priority,
+				parentId,
+				status: "todo",
+			});
 			onTaskCreated?.();
+			setOpen(false);
+			setTitle("");
+			setComplexity("medium");
+			setPriority("medium");
+			setParentId(null);
 		} catch (error) {
 			console.error("Failed to create task:", error);
 		} finally {
@@ -101,7 +90,7 @@ export default function AddTaskDialog({
 				title,
 				existingTasks || ""
 			);
-			setAiSuggestions(suggestions);
+			setSuggestions(suggestions);
 		} catch (error) {
 			console.error("Failed to get AI suggestions:", error);
 		} finally {
@@ -148,6 +137,27 @@ export default function AddTaskDialog({
 										onChange={(e) => setTitle(e.target.value)}
 										placeholder="What do you want to get done?"
 									/>
+								</div>
+								<div className="mt-4 flex flex-col space-y-2">
+									<Label htmlFor="parent">Parent Task (Optional)</Label>
+									<Select
+										value={parentId?.toString() || ""}
+										onValueChange={(value) =>
+											setParentId(value ? parseInt(value) : null)
+										}
+									>
+										<SelectTrigger id="parent">
+											<SelectValue placeholder="Select a parent task" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="">No Parent</SelectItem>
+											{(board.tasks || []).map((task: Task) => (
+												<SelectItem key={task.id} value={task.id.toString()}>
+													{task.title}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
 								</div>
 								<div className="grid grid-cols-2 gap-4">
 									<div className="flex flex-col space-y-2">
@@ -210,7 +220,7 @@ export default function AddTaskDialog({
 							</div>
 						) : (
 							<div className="max-h-[400px] space-y-4 overflow-y-auto px-1">
-								{aiSuggestions.map((suggestion, index) => (
+								{suggestions.map((suggestion, index) => (
 									<Card
 										key={index}
 										className={cn(
@@ -281,7 +291,7 @@ export default function AddTaskDialog({
 									variant="outline"
 									onClick={() => {
 										setIsAiMode(false);
-										setAiSuggestions([]);
+										setSuggestions([]);
 										setSelectedTasks(new Set());
 									}}
 								>
