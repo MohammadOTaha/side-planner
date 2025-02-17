@@ -73,8 +73,13 @@ function TaskMetadata({
 
 function ParentTaskHeader({ title }: { title: string }) {
 	return (
-		<div className="border-border/40 bg-muted/30 absolute inset-x-0 top-0 rounded-t-md border-b px-3 py-2">
-			<p className="text-muted-foreground text-sm font-medium">{title}</p>
+		<div className="border-border/40 bg-muted/30 absolute inset-x-0 top-0 rounded-t-md border-b px-3 py-1.5">
+			<div className="flex items-center gap-2">
+				<div className="bg-muted-foreground/50 h-1 w-1 rounded-full" />
+				<p className="text-muted-foreground line-clamp-1 text-xs font-medium">
+					{title}
+				</p>
+			</div>
 		</div>
 	);
 }
@@ -121,7 +126,7 @@ export default function BoardTask({
 		<div
 			ref={setNodeRef}
 			style={style}
-			className={cn("group relative mb-2", isDragging && "opacity-50")}
+			className={cn("group relative", isDragging && "opacity-50")}
 			{...attributes}
 			{...listeners}
 		>
@@ -129,32 +134,34 @@ export default function BoardTask({
 				id={`task-${task.id}`}
 				className={cn(
 					"hover:bg-muted/50 border-border/40 group flex cursor-grab flex-col transition-colors active:cursor-grabbing",
-					task.parentId && "pt-8"
+					task.parentId && "pt-7",
+					"shadow-sm hover:shadow-md"
 				)}
 			>
 				{task.parentId && task.parent && (
 					<ParentTaskHeader title={task.parent.title} />
 				)}
 				<div className="flex-1 p-3">
-					<div className="mb-2">
-						<p className="text-sm font-medium break-words">{task.title}</p>
-					</div>
-
-					<div className="mt-2 flex items-center justify-between gap-2">
-						<Button
-							variant="ghost"
-							size="icon"
-							className="hover:bg-destructive/90 hover:text-destructive-foreground h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-							onClick={handleDelete}
-							disabled={isDeleting}
-						>
-							<Trash2 className="h-4 w-4" />
-						</Button>
-						<TaskMetadata
-							complexity={task.complexity}
-							priority={task.priority}
-							createdAt={task.createdAt}
-						/>
+					<div className="space-y-2">
+						<p className="text-sm leading-normal font-medium break-words">
+							{task.title}
+						</p>
+						<div className="flex items-center justify-between gap-2">
+							<Button
+								variant="ghost"
+								size="icon"
+								className="hover:bg-destructive/90 hover:text-destructive-foreground h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+								onClick={handleDelete}
+								disabled={isDeleting}
+							>
+								<Trash2 className="h-3.5 w-3.5" />
+							</Button>
+							<TaskMetadata
+								complexity={task.complexity}
+								priority={task.priority}
+								createdAt={task.createdAt}
+							/>
+						</div>
 					</div>
 				</div>
 			</Card>
