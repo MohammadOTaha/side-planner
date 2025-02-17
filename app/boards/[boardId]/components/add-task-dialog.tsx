@@ -51,24 +51,45 @@ export default function AddTaskDialog({
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!title.trim()) return;
 
 		try {
 			setIsLoading(true);
-			await createTaskAction({
-				title: title.trim(),
-				boardId: board.id,
-				complexity,
-				priority,
-				parentId,
-				status: "todo",
-			});
+
+			if (isAiMode) {
+				// Create selected AI-suggested tasks
+				for (const index of selectedTasks) {
+					const suggestion = suggestions[index];
+					await createTaskAction({
+						title: suggestion.title,
+						boardId: board.id,
+						complexity: suggestion.complexity.toLowerCase(),
+						priority,
+						parentId,
+						status: "backlog",
+					});
+				}
+			} else {
+				// Create regular task
+				if (!title.trim()) return;
+				await createTaskAction({
+					title: title.trim(),
+					boardId: board.id,
+					complexity,
+					priority,
+					parentId,
+					status: "backlog",
+				});
+			}
+
 			onTaskCreated?.();
 			setOpen(false);
 			setTitle("");
 			setComplexity("medium");
 			setPriority("medium");
 			setParentId(null);
+			setIsAiMode(false);
+			setSuggestions([]);
+			setSelectedTasks(new Set());
 		} catch (error) {
 			console.error("Failed to create task:", error);
 		} finally {
