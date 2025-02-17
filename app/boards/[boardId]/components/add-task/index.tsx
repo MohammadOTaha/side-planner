@@ -136,21 +136,15 @@ export default function AddTaskDialog({
 			});
 
 			await Promise.all(promises);
-			const totalTasks = Array.from(selectedTasks).filter(
-				(index) =>
-					!suggestions[index].subtasks ||
-					Array.from(selectedSubtasks).some((key) =>
-						key.startsWith(`${index}-`)
-					)
-			).length;
-			const totalSelectedSubtasks = Array.from(selectedSubtasks).length;
-			const message =
-				totalSelectedSubtasks > 0
-					? `Added ${totalSelectedSubtasks} subtask${
-							totalSelectedSubtasks === 1 ? "" : "s"
-						} to the board`
-					: `Added ${totalTasks} task${totalTasks === 1 ? "" : "s"} to the board`;
-			toast.success(message);
+			const { taskCount, subtaskCount } = getTaskCount();
+			const parts = [];
+			if (taskCount > 0) {
+				parts.push(`${taskCount} task${taskCount === 1 ? "" : "s"}`);
+			}
+			if (subtaskCount > 0) {
+				parts.push(`${subtaskCount} subtask${subtaskCount === 1 ? "" : "s"}`);
+			}
+			toast.success(`Added ${parts.join(" & ")} to the board`);
 
 			onTaskCreated?.();
 			setOpen(false);
@@ -229,6 +223,32 @@ export default function AddTaskDialog({
 		setPriority("medium");
 	};
 
+	const getTaskCount = () => {
+		let taskCount = 0;
+		let subtaskCount = 0;
+
+		Array.from(selectedTasks).forEach((index) => {
+			const suggestion = suggestions[index];
+			const hasSelectedSubtasks = Array.from(selectedSubtasks).some((key) =>
+				key.startsWith(`${index}-`)
+			);
+
+			// Count parent task if it has no subtasks or if it's selected without any subtasks
+			if (!suggestion.subtasks || !hasSelectedSubtasks) {
+				taskCount++;
+			}
+
+			// Count selected subtasks
+			if (suggestion.subtasks) {
+				subtaskCount += Array.from(selectedSubtasks).filter((key) =>
+					key.startsWith(`${index}-`)
+				).length;
+			}
+		});
+
+		return { taskCount, subtaskCount };
+	};
+
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
@@ -258,9 +278,9 @@ export default function AddTaskDialog({
 						{!isAiMode ? (
 							<RegularTaskForm
 								board={board}
-								isLoading={isLoading}
 								onSubmit={handleRegularSubmit}
 								onAIPlan={handleAIPlan}
+								isLoading={isLoading}
 							/>
 						) : (
 							<AITaskSuggestions
@@ -301,21 +321,29 @@ export default function AddTaskDialog({
 								</Tooltip>
 								<GlowButton
 									type="submit"
-									disabled={
-										(selectedTasks.size === 0 && selectedSubtasks.size === 0) ||
-										isLoading
-									}
+									disabled={selectedTasks.size === 0 || isLoading}
 									loading={isLoading}
 								>
 									{isLoading
-										? "Adding tasks..."
-										: selectedSubtasks.size > 0
-											? `Add ${selectedSubtasks.size} Subtask${
-													selectedSubtasks.size === 1 ? "" : "s"
-												}`
-											: `Add ${selectedTasks.size} Task${
-													selectedTasks.size === 1 ? "" : "s"
-												}`}
+										? "Planning tasks..."
+										: (() => {
+												const { taskCount, subtaskCount } = getTaskCount();
+												if (taskCount === 0 && subtaskCount === 0)
+													return "Add Tasks";
+
+												const parts = [];
+												if (taskCount > 0) {
+													parts.push(
+														`${taskCount} Task${taskCount === 1 ? "" : "s"}`
+													);
+												}
+												if (subtaskCount > 0) {
+													parts.push(
+														`${subtaskCount} Subtask${subtaskCount === 1 ? "" : "s"}`
+													);
+												}
+												return `Add ${parts.join(" & ")}`;
+											})()}
 								</GlowButton>
 							</TooltipProvider>
 						</DialogFooter>
