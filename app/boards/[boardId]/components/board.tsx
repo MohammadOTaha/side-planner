@@ -295,9 +295,9 @@ export default function Board({ board }: BoardProps) {
 				onDragOver={handleDragOver}
 				onDragEnd={handleDragEnd}
 			>
-				<div className="flex h-[calc(100vh-12rem)] gap-6 overflow-hidden">
+				<div className="flex h-[calc(100vh-12rem)] gap-4 overflow-hidden">
 					{/* Backlog Column */}
-					<div className="w-80 overflow-y-auto">
+					<div className="w-[calc((100%-3rem)/4)] overflow-y-auto">
 						<SortableContext
 							items={columns[0].tasks.map((task) => task.id)}
 							strategy={verticalListSortingStrategy}
@@ -307,10 +307,10 @@ export default function Board({ board }: BoardProps) {
 					</div>
 
 					{/* Vertical Separator */}
-					<div className="bg-border/50 mx-2 h-full w-px" />
+					<div className="bg-border/50 h-full w-px" />
 
 					{/* Main Columns */}
-					<div className="grid flex-1 grid-cols-3 gap-6 overflow-x-auto">
+					<div className="grid flex-1 grid-cols-3 gap-4 overflow-x-auto">
 						{columns.slice(1).map((column) => (
 							<div key={column.id} className="overflow-y-auto">
 								<SortableContext
