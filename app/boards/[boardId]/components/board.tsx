@@ -27,7 +27,7 @@ import {
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useCallback, useEffect, useState } from "react";
-import AddTaskDialog from "./add-task-dialog";
+import AddTaskDialog from "./add-task/index";
 import BoardColumn from "./board-column";
 import ProjectHeader from "./project-header";
 
