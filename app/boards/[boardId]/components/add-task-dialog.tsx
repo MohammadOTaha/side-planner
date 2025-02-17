@@ -45,6 +45,7 @@ import {
 	ChevronUp,
 	Minus,
 	Plus,
+	RefreshCw,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -584,6 +585,25 @@ export default function AddTaskDialog({
 									>
 										Back
 									</Button>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<Button
+												type="button"
+												variant="outline"
+												size="icon"
+												onClick={handleAiPlan}
+												disabled={isLoading}
+												className="h-9 w-9"
+											>
+												<RefreshCw
+													className={cn("h-4 w-4", isLoading && "animate-spin")}
+												/>
+											</Button>
+										</TooltipTrigger>
+										<TooltipContent>
+											Generate new AI task suggestions
+										</TooltipContent>
+									</Tooltip>
 									<GlowButton
 										type="submit"
 										disabled={selectedSubtasks.size === 0 || isLoading}

@@ -3,6 +3,12 @@
 import { deleteTaskAction } from "@/app/boards/actions";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { type BoardTaskProps, type DraggableTask } from "@/lib/types/board";
 import { cn } from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
@@ -26,27 +32,63 @@ function TaskMetadata({
 		switch (priority) {
 			case "low":
 				return (
-					<span className="rounded-md bg-emerald-500/10 px-2 py-1">
-						<ChevronDown className="h-4 w-4 fill-emerald-600 text-emerald-600" />
-					</span>
+					<TooltipProvider>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<span className="rounded-md bg-emerald-500/10 px-2 py-1">
+									<ChevronDown className="h-4 w-4 fill-emerald-600 text-emerald-600" />
+								</span>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Priority: Low</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
 				);
 			case "medium":
 				return (
-					<span className="rounded-md bg-amber-500/10 px-2 py-1">
-						<Minus className="h-4 w-4 fill-amber-600 text-amber-600" />
-					</span>
+					<TooltipProvider>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<span className="rounded-md bg-amber-500/10 px-2 py-1">
+									<Minus className="h-4 w-4 fill-amber-600 text-amber-600" />
+								</span>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Priority: Medium</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
 				);
 			case "high":
 				return (
-					<span className="rounded-md bg-rose-500/10 px-2 py-1">
-						<ChevronUp className="h-4 w-4 fill-rose-600 text-rose-600" />
-					</span>
+					<TooltipProvider>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<span className="rounded-md bg-rose-500/10 px-2 py-1">
+									<ChevronUp className="h-4 w-4 fill-rose-600 text-rose-600" />
+								</span>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Priority: High</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
 				);
 			default:
 				return (
-					<span className="rounded-md bg-amber-500/10 px-2 py-1">
-						<Minus className="h-4 w-4 fill-amber-600 text-amber-600" />
-					</span>
+					<TooltipProvider>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<span className="rounded-md bg-amber-500/10 px-2 py-1">
+									<Minus className="h-4 w-4 fill-amber-600 text-amber-600" />
+								</span>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Priority: Medium</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
 				);
 		}
 	};
@@ -55,18 +97,30 @@ function TaskMetadata({
 		<div className="flex items-center gap-2">
 			<span className="text-muted-foreground text-xs">{format(createdAt)}</span>
 			<div className="flex items-center gap-1">
-				<span
-					className={cn(
-						"rounded-md px-2 py-1 text-xs font-medium",
-						complexity === "easy"
-							? "bg-emerald-500/10 text-emerald-600"
-							: complexity === "medium"
-								? "bg-amber-500/10 text-amber-600"
-								: "bg-rose-500/10 text-rose-600"
-					)}
-				>
-					{complexity.charAt(0).toUpperCase() + complexity.slice(1)}
-				</span>
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<span
+								className={cn(
+									"rounded-md px-2 py-1 text-xs font-medium",
+									complexity === "easy"
+										? "bg-emerald-500/10 text-emerald-600"
+										: complexity === "medium"
+											? "bg-amber-500/10 text-amber-600"
+											: "bg-rose-500/10 text-rose-600"
+								)}
+							>
+								{complexity.charAt(0).toUpperCase() + complexity.slice(1)}
+							</span>
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>
+								Complexity:{" "}
+								{complexity.charAt(0).toUpperCase() + complexity.slice(1)}
+							</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 				{getPriorityIcon(priority)}
 			</div>
 		</div>
