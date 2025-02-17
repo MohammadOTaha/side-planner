@@ -3,7 +3,7 @@
 import { deleteTaskAction } from "@/app/boards/actions";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { type Task } from "@/lib/db/schema";
+import { type BoardTaskProps } from "@/lib/types/board";
 import { cn } from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -12,16 +12,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { format } from "timeago.js";
 
-interface DraggableTask extends Omit<Task, "id"> {
-	id: string; // For DnD we need string IDs
-}
-
-interface Props {
-	task: DraggableTask;
-	onRemoved: (taskId: string) => void;
-}
-
-export default function BoardTask({ task, onRemoved }: Props) {
+export default function BoardTask({ task, onRemoved }: BoardTaskProps) {
 	const [isDeleting, setIsDeleting] = useState(false);
 	const router = useRouter();
 	const {
@@ -87,49 +78,61 @@ export default function BoardTask({ task, onRemoved }: Props) {
 			ref={setNodeRef}
 			style={style}
 			className={cn(
-				"hover:bg-muted/50 border-border/40 group flex min-h-[80px] cursor-grab flex-col p-3 transition-colors active:cursor-grabbing",
+				"hover:bg-muted/50 border-border/40 group flex min-h-[80px] cursor-grab flex-col transition-colors active:cursor-grabbing",
 				isDragging && "opacity-50"
 			)}
 			{...attributes}
 			{...listeners}
 		>
-			<div className="flex-1">
-				<div className="mb-2">
-					<p className="text-sm font-medium break-words">{task.title}</p>
-				</div>
+			<div className="flex-1 px-3 py-2">
+				<p className="text-sm font-black break-words">{task.title}</p>
 			</div>
-			<div className="mt-2 flex items-center justify-between gap-2">
-				<Button
-					variant="ghost"
-					size="icon"
-					className="hover:bg-destructive/90 hover:text-destructive-foreground h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-					onClick={handleDelete}
-					disabled={isDeleting}
-				>
-					<Trash2 className="h-4 w-4" />
-				</Button>
-				<div className="flex items-center gap-2">
-					<span className="text-muted-foreground text-xs">
-						{format(task.createdAt)}
-					</span>
-					<div className="flex items-center gap-1">
-						<span
-							className={cn(
-								"rounded-full px-2 py-1 text-xs font-medium",
-								task.complexity === "easy"
-									? "bg-emerald-500/10 text-emerald-600"
-									: task.complexity === "medium"
-										? "bg-amber-500/10 text-amber-600"
-										: "bg-rose-500/10 text-rose-600"
-							)}
-						>
-							{task.complexity.charAt(0).toUpperCase() +
-								task.complexity.slice(1)}
-						</span>
-						{getPriorityIcon(task.priority)}
+
+			<Card
+				className={cn(
+					"hover:bg-muted/50 border-border/40 group flex min-h-[80px] cursor-grab flex-col p-3 transition-colors active:cursor-grabbing",
+					isDragging && "opacity-50"
+				)}
+			>
+				<div className="flex-1">
+					<div className="mb-2">
+						<p className="text-sm font-medium break-words">{task.title}</p>
 					</div>
 				</div>
-			</div>
+
+				<div className="mt-2 flex items-center justify-between gap-2 p-3">
+					<Button
+						variant="ghost"
+						size="icon"
+						className="hover:bg-destructive/90 hover:text-destructive-foreground h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+						onClick={handleDelete}
+						disabled={isDeleting}
+					>
+						<Trash2 className="h-4 w-4" />
+					</Button>
+					<div className="flex items-center gap-2">
+						<span className="text-muted-foreground text-xs">
+							{format(task.createdAt)}
+						</span>
+						<div className="flex items-center gap-1">
+							<span
+								className={cn(
+									"rounded-full px-2 py-1 text-xs font-medium",
+									task.complexity === "easy"
+										? "bg-emerald-500/10 text-emerald-600"
+										: task.complexity === "medium"
+											? "bg-amber-500/10 text-amber-600"
+											: "bg-rose-500/10 text-rose-600"
+								)}
+							>
+								{task.complexity.charAt(0).toUpperCase() +
+									task.complexity.slice(1)}
+							</span>
+							{getPriorityIcon(task.priority)}
+						</div>
+					</div>
+				</div>
+			</Card>
 		</Card>
 	);
 }

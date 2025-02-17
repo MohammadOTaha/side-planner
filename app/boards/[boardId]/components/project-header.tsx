@@ -1,26 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { type ProjectHeaderProps } from "@/lib/types/board";
 import { Pencil } from "lucide-react";
 import EditProjectDialog from "../../components/board-dialog";
-
-interface Props {
-	title: string;
-	description?: string | null;
-	features?: string | null;
-	onUpdateBoard?: (
-		title: string,
-		description: string,
-		features: string
-	) => void;
-}
 
 export default function ProjectHeader({
 	title,
 	description,
 	features,
 	onUpdateBoard,
-}: Props) {
+}: ProjectHeaderProps) {
 	return (
 		<div className="group relative space-y-1.5">
 			<div className="flex items-center gap-2">

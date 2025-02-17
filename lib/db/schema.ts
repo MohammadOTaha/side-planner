@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
+	AnyPgColumn,
 	integer,
 	pgTable,
 	serial,
@@ -39,6 +40,7 @@ export const tasks = pgTable("tasks", {
 	boardId: integer("board_id")
 		.notNull()
 		.references(() => boards.id),
+	parentId: integer("parent_id").references((): AnyPgColumn => tasks.id),
 	dueDate: timestamp("due_date"),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -57,10 +59,15 @@ export const boardsRelations = relations(boards, ({ one, many }) => ({
 	tasks: many(tasks),
 }));
 
-export const tasksRelations = relations(tasks, ({ one }) => ({
+export const tasksRelations = relations(tasks, ({ one, many }) => ({
 	board: one(boards, {
 		fields: [tasks.boardId],
 		references: [boards.id],
+	}),
+	parent: one(tasks, {
+		fields: [tasks.parentId],
+		references: [tasks.id],
+		relationName: "parentTask",
 	}),
 }));
 

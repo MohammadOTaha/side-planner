@@ -25,28 +25,19 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { type Board } from "@/lib/db/schema";
+import {
+	type AddTaskDialogProps,
+	type AITaskSuggestion,
+} from "@/lib/types/board";
 import { cn } from "@/lib/utils";
 import { ArrowDown, ArrowRight, ArrowUp, Check, Plus } from "lucide-react";
 import { useState } from "react";
-
-interface Props {
-	board: Board;
-	onTaskCreated?: () => void;
-	existingTasks?: string;
-}
-
-interface AITaskSuggestion {
-	title: string;
-	description: string;
-	complexity: "Easy" | "Medium" | "Hard";
-}
 
 export default function AddTaskDialog({
 	board,
 	onTaskCreated,
 	existingTasks,
-}: Props) {
+}: AddTaskDialogProps) {
 	const [open, setOpen] = useState(false);
 	const [title, setTitle] = useState("");
 	const [isLoading, setIsLoading] = useState(false);

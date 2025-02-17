@@ -6,7 +6,11 @@ import {
 } from "@/app/boards/actions";
 import { Card } from "@/components/ui/card";
 import { getBoardTasks } from "@/lib/db/queries";
-import { type Board, type Task } from "@/lib/db/schema";
+import {
+	type BoardProps,
+	type Column,
+	type DraggableTask,
+} from "@/lib/types/board";
 import {
 	DndContext,
 	DragOverlay,
@@ -20,20 +24,6 @@ import { useCallback, useEffect, useState } from "react";
 import AddTaskDialog from "./add-task-dialog";
 import BoardColumn from "./board-column";
 import ProjectHeader from "./project-header";
-
-interface BoardTask extends Omit<Task, "id"> {
-	id: string; // For DnD we need string IDs
-}
-
-interface Column {
-	id: string;
-	title: string;
-	tasks: BoardTask[];
-}
-
-interface Props {
-	board: Board;
-}
 
 const INITIAL_COLUMNS: Column[] = [
 	{
@@ -58,8 +48,8 @@ const INITIAL_COLUMNS: Column[] = [
 	},
 ];
 
-export default function Board({ board }: Props) {
-	const [activeTask, setActiveTask] = useState<BoardTask | null>(null);
+export default function Board({ board }: BoardProps) {
+	const [activeTask, setActiveTask] = useState<DraggableTask | null>(null);
 	const [columns, setColumns] = useState<Column[]>(INITIAL_COLUMNS);
 
 	const loadTasks = useCallback(async () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { type Task } from "@/lib/db/schema";
+import { type BoardColumnProps } from "@/lib/types/board";
 import { cn } from "@/lib/utils";
 import { useDroppable } from "@dnd-kit/core";
 import {
@@ -18,21 +18,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import DraggableTask from "./board-task";
 
-interface DraggableTask extends Omit<Task, "id"> {
-	id: string; // For DnD we need string IDs
-}
-
-interface Column {
-	id: string;
-	title: string;
-	tasks: DraggableTask[];
-}
-
-interface Props {
-	column: Column;
-}
-
-export default function BoardColumn({ column }: Props) {
+export default function BoardColumn({ column }: BoardColumnProps) {
 	const { setNodeRef, isOver } = useDroppable({
 		id: column.id,
 	});

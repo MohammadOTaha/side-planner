@@ -36,6 +36,13 @@
       "when": 1739643263343,
       "tag": "0004_sharp_jimmy_woo",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1739733118532,
+      "tag": "0005_open_prowler",
+      "breakpoints": true
     }
   ]
 }
