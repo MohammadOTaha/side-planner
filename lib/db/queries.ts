@@ -44,13 +44,17 @@ export async function createBoard(data: NewBoard) {
 }
 
 export async function getBoard(boardId: number, userId: number) {
-	const board = await db
-		.select()
-		.from(boards)
-		.where(and(eq(boards.id, boardId), eq(boards.userId, userId)))
-		.limit(1);
+	const board = await db.query.boards.findFirst({
+		where: and(eq(boards.id, boardId), eq(boards.userId, userId)),
+		with: {
+			tasks: {
+				where: isNull(tasks.deletedAt),
+				orderBy: desc(tasks.updatedAt),
+			},
+		},
+	});
 
-	return board[0] || null;
+	return board;
 }
 
 export async function getUserBoards(userId: number) {

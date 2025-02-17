@@ -141,17 +141,17 @@ export default function AddTaskDialog({
 								<div className="mt-4 flex flex-col space-y-2">
 									<Label htmlFor="parent">Parent Task (Optional)</Label>
 									<Select
-										value={parentId?.toString() || ""}
+										value={parentId?.toString() ?? "none"}
 										onValueChange={(value) =>
-											setParentId(value ? parseInt(value) : null)
+											setParentId(value === "none" ? null : parseInt(value))
 										}
 									>
 										<SelectTrigger id="parent">
 											<SelectValue placeholder="Select a parent task" />
 										</SelectTrigger>
 										<SelectContent>
-											<SelectItem value="">No Parent</SelectItem>
-											{(board.tasks || []).map((task: Task) => (
+											<SelectItem value="none">No Parent</SelectItem>
+											{(board?.tasks || []).map((task: Task) => (
 												<SelectItem key={task.id} value={task.id.toString()}>
 													{task.title}
 												</SelectItem>
