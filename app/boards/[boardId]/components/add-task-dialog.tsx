@@ -39,6 +39,7 @@ import {
 import { cn } from "@/lib/utils";
 import { ArrowDown, ArrowRight, ArrowUp, Check, Plus } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function AddTaskDialog({
 	board,
@@ -63,7 +64,7 @@ export default function AddTaskDialog({
 
 			if (isAiMode) {
 				// Create selected AI-suggested tasks
-				for (const index of selectedTasks) {
+				const promises = Array.from(selectedTasks).map(async (index) => {
 					const suggestion = suggestions[index];
 					await createTaskAction({
 						title: suggestion.title,
@@ -73,7 +74,12 @@ export default function AddTaskDialog({
 						parentId,
 						status: "backlog",
 					});
-				}
+				});
+
+				await Promise.all(promises);
+				toast.success(
+					`Created ${selectedTasks.size} task${selectedTasks.size === 1 ? "" : "s"} successfully`
+				);
 			} else {
 				// Create regular task
 				if (!title.trim()) return;
@@ -85,6 +91,7 @@ export default function AddTaskDialog({
 					parentId,
 					status: "backlog",
 				});
+				toast.success("Task created successfully");
 			}
 
 			onTaskCreated?.();
@@ -98,6 +105,7 @@ export default function AddTaskDialog({
 			setSelectedTasks(new Set());
 		} catch (error) {
 			console.error("Failed to create task:", error);
+			toast.error("Failed to create task. Please try again.");
 		} finally {
 			setIsLoading(false);
 		}
@@ -118,8 +126,11 @@ export default function AddTaskDialog({
 				existingTasks || ""
 			);
 			setSuggestions(suggestions);
+			toast.success("AI suggestions generated successfully");
 		} catch (error) {
 			console.error("Failed to get AI suggestions:", error);
+			toast.error("Failed to generate AI suggestions. Please try again.");
+			setIsAiMode(false);
 		} finally {
 			setIsLoading(false);
 		}
