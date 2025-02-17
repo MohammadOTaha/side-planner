@@ -39,7 +39,7 @@ export const tasks = pgTable("tasks", {
 	complexity: varchar("complexity", { length: 10 }).notNull().default("medium"),
 	boardId: integer("board_id")
 		.notNull()
-		.references(() => boards.id),
+		.references(() => boards.id, { onDelete: "cascade" }),
 	parentId: integer("parent_id").references((): AnyPgColumn => tasks.id),
 	position: integer("position").notNull().default(0),
 	dueDate: timestamp("due_date"),
