@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import {
 	AnyPgColumn,
+	boolean,
 	integer,
 	pgTable,
 	serial,
@@ -37,6 +38,7 @@ export const tasks = pgTable("tasks", {
 	status: varchar("status", { length: 50 }).notNull().default("todo"),
 	priority: varchar("priority", { length: 20 }).notNull().default("medium"),
 	complexity: varchar("complexity", { length: 10 }).notNull().default("medium"),
+	isVisible: boolean("is_visible").notNull().default(true),
 	boardId: integer("board_id")
 		.notNull()
 		.references(() => boards.id, { onDelete: "cascade" }),

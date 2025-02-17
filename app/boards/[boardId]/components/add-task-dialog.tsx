@@ -63,6 +63,9 @@ export default function AddTaskDialog({
 	const [isLoading, setIsLoading] = useState(false);
 	const [suggestions, setSuggestions] = useState<AITaskSuggestion[]>([]);
 	const [selectedTasks, setSelectedTasks] = useState<Set<number>>(new Set());
+	const [selectedSubtasks, setSelectedSubtasks] = useState<Set<string>>(
+		new Set()
+	);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -74,36 +77,52 @@ export default function AddTaskDialog({
 				// Create selected AI-suggested tasks
 				const promises = Array.from(selectedTasks).map(async (index) => {
 					const suggestion = suggestions[index];
-					const task = await createTaskAction({
-						title: suggestion.title,
-						boardId: board.id,
-						complexity: suggestion.complexity.toLowerCase(),
-						priority,
-						parentId,
-						status: "backlog",
-					});
+					const selectedSubtasksForParent = suggestion.subtasks?.filter(
+						(_, subtaskIndex) =>
+							selectedSubtasks.has(`${index}-${subtaskIndex}`)
+					);
 
-					// Create subtasks if they exist
-					if (suggestion.subtasks && suggestion.subtasks.length > 0) {
-						const subtaskPromises = suggestion.subtasks.map((subtask) =>
-							createTaskAction({
-								title: subtask.title,
-								boardId: board.id,
-								complexity: subtask.complexity.toLowerCase(),
-								priority,
-								parentId: task.id,
-								status: "backlog",
-							})
-						);
-						await Promise.all(subtaskPromises);
+					// Only create parent task if it has selected subtasks or no subtasks at all
+					if (!suggestion.subtasks || selectedSubtasksForParent?.length! > 0) {
+						const task = await createTaskAction({
+							title: suggestion.title,
+							boardId: board.id,
+							complexity: suggestion.complexity.toLowerCase(),
+							priority,
+							parentId,
+							status: "backlog",
+							isVisible:
+								!selectedSubtasksForParent ||
+								selectedSubtasksForParent.length === 0,
+						});
+
+						// Create only selected subtasks
+						if (
+							selectedSubtasksForParent &&
+							selectedSubtasksForParent.length > 0
+						) {
+							const subtaskPromises = selectedSubtasksForParent.map((subtask) =>
+								createTaskAction({
+									title: subtask.title,
+									boardId: board.id,
+									complexity: subtask.complexity.toLowerCase(),
+									priority,
+									parentId: task.id,
+									status: "backlog",
+									isVisible: true,
+								})
+							);
+							await Promise.all(subtaskPromises);
+						}
 					}
 				});
 
 				await Promise.all(promises);
+				const totalSelectedSubtasks = Array.from(selectedSubtasks).length;
 				toast.success(
-					`Created ${selectedTasks.size} task${
-						selectedTasks.size === 1 ? "" : "s"
-					} with subtasks successfully`
+					`Added ${totalSelectedSubtasks} subtask${
+						totalSelectedSubtasks === 1 ? "" : "s"
+					} to the board`
 				);
 			} else {
 				// Create regular task
@@ -115,6 +134,7 @@ export default function AddTaskDialog({
 					priority,
 					parentId,
 					status: "backlog",
+					isVisible: true,
 				});
 				toast.success("Task created successfully");
 			}
@@ -128,6 +148,7 @@ export default function AddTaskDialog({
 			setIsAiMode(false);
 			setSuggestions([]);
 			setSelectedTasks(new Set());
+			setSelectedSubtasks(new Set());
 		} catch (error) {
 			console.error("Failed to create task:", error);
 			toast.error("Failed to create task. Please try again.");
@@ -165,10 +186,56 @@ export default function AddTaskDialog({
 		const newSelected = new Set(selectedTasks);
 		if (newSelected.has(index)) {
 			newSelected.delete(index);
+			// Remove all subtask selections for this task
+			const newSelectedSubtasks = new Set(selectedSubtasks);
+			Array.from(selectedSubtasks).forEach((key) => {
+				if (key.startsWith(`${index}-`)) {
+					newSelectedSubtasks.delete(key);
+				}
+			});
+			setSelectedSubtasks(newSelectedSubtasks);
 		} else {
 			newSelected.add(index);
+			// Select all subtasks for this task
+			const newSelectedSubtasks = new Set(selectedSubtasks);
+			suggestions[index].subtasks?.forEach((_, subtaskIndex) => {
+				newSelectedSubtasks.add(`${index}-${subtaskIndex}`);
+			});
+			setSelectedSubtasks(newSelectedSubtasks);
 		}
 		setSelectedTasks(newSelected);
+	};
+
+	const toggleSubtaskSelection = (
+		taskIndex: number,
+		subtaskIndex: number,
+		event: React.MouseEvent
+	) => {
+		event.stopPropagation();
+		const subtaskKey = `${taskIndex}-${subtaskIndex}`;
+		const newSelectedSubtasks = new Set(selectedSubtasks);
+
+		if (newSelectedSubtasks.has(subtaskKey)) {
+			newSelectedSubtasks.delete(subtaskKey);
+			// If no subtasks selected, remove parent task selection
+			if (
+				!Array.from(newSelectedSubtasks).some((key) =>
+					key.startsWith(`${taskIndex}-`)
+				)
+			) {
+				const newSelectedTasks = new Set(selectedTasks);
+				newSelectedTasks.delete(taskIndex);
+				setSelectedTasks(newSelectedTasks);
+			}
+		} else {
+			newSelectedSubtasks.add(subtaskKey);
+			// Add parent task selection if not already selected
+			const newSelectedTasks = new Set(selectedTasks);
+			newSelectedTasks.add(taskIndex);
+			setSelectedTasks(newSelectedTasks);
+		}
+
+		setSelectedSubtasks(newSelectedSubtasks);
 	};
 
 	return (
@@ -367,6 +434,17 @@ export default function AddTaskDialog({
 																>
 																	{suggestion.complexity}
 																</span>
+																{suggestion.subtasks &&
+																	suggestion.subtasks.length > 0 && (
+																		<span className="text-muted-foreground text-xs">
+																			{
+																				Array.from(selectedSubtasks).filter(
+																					(key) => key.startsWith(`${index}-`)
+																				).length
+																			}{" "}
+																			/ {suggestion.subtasks.length} subtasks
+																		</span>
+																	)}
 																{selectedTasks.has(index) ? (
 																	<div className="bg-primary/10 rounded-full p-1">
 																		<Check className="text-primary h-4 w-4" />
@@ -390,15 +468,42 @@ export default function AddTaskDialog({
 																				<div
 																					key={subtaskIndex}
 																					className="space-y-1.5"
+																					onClick={(e) =>
+																						toggleSubtaskSelection(
+																							index,
+																							subtaskIndex,
+																							e
+																						)
+																					}
 																				>
-																					<div className="flex items-start justify-between gap-2">
-																						<div>
-																							<h6 className="text-sm font-medium">
-																								{subtask.title}
-																							</h6>
-																							<p className="text-muted-foreground text-xs">
-																								{subtask.description}
-																							</p>
+																					<div
+																						className={cn(
+																							"flex items-start justify-between gap-2 rounded-lg p-2 transition-colors",
+																							selectedSubtasks.has(
+																								`${index}-${subtaskIndex}`
+																							)
+																								? "bg-primary/10"
+																								: "hover:bg-muted/60"
+																						)}
+																					>
+																						<div className="flex items-start gap-2">
+																							<div className="mt-1">
+																								{selectedSubtasks.has(
+																									`${index}-${subtaskIndex}`
+																								) ? (
+																									<Check className="text-primary h-3 w-3" />
+																								) : (
+																									<div className="border-muted-foreground/30 h-3 w-3 rounded-sm border" />
+																								)}
+																							</div>
+																							<div>
+																								<h6 className="text-sm font-medium">
+																									{subtask.title}
+																								</h6>
+																								<p className="text-muted-foreground text-xs">
+																									{subtask.description}
+																								</p>
+																							</div>
 																						</div>
 																						<span
 																							className={cn(
@@ -474,18 +579,21 @@ export default function AddTaskDialog({
 											setIsAiMode(false);
 											setSuggestions([]);
 											setSelectedTasks(new Set());
+											setSelectedSubtasks(new Set());
 										}}
 									>
 										Back
 									</Button>
 									<GlowButton
 										type="submit"
-										disabled={selectedTasks.size === 0 || isLoading}
+										disabled={selectedSubtasks.size === 0 || isLoading}
 										loading={isLoading}
 									>
 										{isLoading
 											? "Adding tasks..."
-											: `Add ${selectedTasks.size} Task${selectedTasks.size === 1 ? "" : "s"}`}
+											: `Add ${selectedSubtasks.size} Subtask${
+													selectedSubtasks.size === 1 ? "" : "s"
+												}`}
 									</GlowButton>
 								</>
 							)}

@@ -73,7 +73,7 @@ export default function Board({ board }: BoardProps) {
 		const tasksByStatus = INITIAL_COLUMNS.map((column) => ({
 			...column,
 			tasks: tasks
-				.filter((task) => task.status === column.id)
+				.filter((task) => task.status === column.id && task.isVisible)
 				.map((task) => ({
 					...task,
 					id: task.id.toString(),
