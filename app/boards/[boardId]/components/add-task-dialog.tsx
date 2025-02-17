@@ -286,30 +286,45 @@ export default function AddTaskDialog({
 								{isLoading ? (
 									<>
 										{Array.from({ length: 3 }).map((_, index) => (
-											<Card key={index} className="p-4">
+											<Card key={index} className="border p-4">
 												<div className="flex items-start justify-between gap-4">
-													<div className="flex-1 space-y-3">
-														<div>
-															<Skeleton className="h-4 w-3/4" />
-															<Skeleton className="mt-2 h-3 w-full" />
-														</div>
-														<div className="flex items-center gap-3">
-															<Skeleton className="h-5 w-24" />
-														</div>
-														<div className="mt-4 space-y-3 border-l-2 pl-4">
-															<Skeleton className="h-3 w-16" />
-															<div className="space-y-3">
-																{Array.from({ length: 2 }).map(
-																	(_, subIndex) => (
-																		<div key={subIndex} className="space-y-1">
-																			<Skeleton className="h-3 w-2/3" />
-																			<Skeleton className="h-2 w-full" />
-																			<Skeleton className="h-4 w-20" />
-																		</div>
-																	)
-																)}
+													<div className="flex-1 space-y-4">
+														<div className="flex items-start justify-between">
+															<div className="space-y-2">
+																<Skeleton className="h-5 w-[180px]" />
+																<Skeleton className="h-4 w-[300px]" />
+															</div>
+															<div className="flex items-center gap-2">
+																<Skeleton className="h-6 w-16 rounded-full" />
+																<Skeleton className="h-6 w-6 rounded-full" />
 															</div>
 														</div>
+
+														{/* Subtasks skeleton - show for some cards */}
+														{index === 1 && (
+															<div className="bg-muted/40 space-y-3 rounded-lg p-3">
+																<div className="flex items-center gap-2">
+																	<Skeleton className="h-3 w-3" />
+																	<Skeleton className="h-3 w-16" />
+																</div>
+																<div className="space-y-3">
+																	{Array.from({ length: 2 }).map(
+																		(_, subIndex) => (
+																			<div
+																				key={subIndex}
+																				className="flex items-start justify-between gap-2"
+																			>
+																				<div className="space-y-1.5">
+																					<Skeleton className="h-4 w-[160px]" />
+																					<Skeleton className="h-3 w-[240px]" />
+																				</div>
+																				<Skeleton className="h-5 w-14 rounded-full" />
+																			</div>
+																		)
+																	)}
+																</div>
+															</div>
+														)}
 													</div>
 												</div>
 											</Card>
