@@ -63,8 +63,9 @@ export async function createTaskAction(data: NewTask) {
 		throw new Error("Not authenticated");
 	}
 
-	await createTask(data);
+	const task = await createTask(data);
 	revalidatePath(`/boards/${data.boardId}`);
+	return task;
 }
 
 export async function updateTaskStatusAction(

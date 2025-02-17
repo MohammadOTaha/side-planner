@@ -52,4 +52,5 @@ export interface AITaskSuggestion {
 	title: string;
 	description: string;
 	complexity: "Easy" | "Medium" | "Hard";
+	subtasks?: AITaskSuggestion[];
 }

@@ -25,6 +25,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
 	Tooltip,
 	TooltipContent,
@@ -37,7 +38,14 @@ import {
 	type AITaskSuggestion,
 } from "@/lib/types/board";
 import { cn } from "@/lib/utils";
-import { ArrowDown, ArrowRight, ArrowUp, Check, Plus } from "lucide-react";
+import {
+	ArrowDown,
+	ArrowRight,
+	ArrowUp,
+	Check,
+	ChevronRight,
+	Plus,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -66,7 +74,7 @@ export default function AddTaskDialog({
 				// Create selected AI-suggested tasks
 				const promises = Array.from(selectedTasks).map(async (index) => {
 					const suggestion = suggestions[index];
-					await createTaskAction({
+					const task = await createTaskAction({
 						title: suggestion.title,
 						boardId: board.id,
 						complexity: suggestion.complexity.toLowerCase(),
@@ -74,11 +82,28 @@ export default function AddTaskDialog({
 						parentId,
 						status: "backlog",
 					});
+
+					// Create subtasks if they exist
+					if (suggestion.subtasks && suggestion.subtasks.length > 0) {
+						const subtaskPromises = suggestion.subtasks.map((subtask) =>
+							createTaskAction({
+								title: subtask.title,
+								boardId: board.id,
+								complexity: subtask.complexity.toLowerCase(),
+								priority,
+								parentId: task.id,
+								status: "backlog",
+							})
+						);
+						await Promise.all(subtaskPromises);
+					}
 				});
 
 				await Promise.all(promises);
 				toast.success(
-					`Created ${selectedTasks.size} task${selectedTasks.size === 1 ? "" : "s"} successfully`
+					`Created ${selectedTasks.size} task${
+						selectedTasks.size === 1 ? "" : "s"
+					} with subtasks successfully`
 				);
 			} else {
 				// Create regular task
@@ -258,48 +283,134 @@ export default function AddTaskDialog({
 							</div>
 						) : (
 							<div className="max-h-[400px] space-y-4 overflow-y-auto px-1">
-								{suggestions.map((suggestion, index) => (
-									<Card
-										key={index}
-										className={cn(
-											"hover:bg-accent/50 cursor-pointer border-2 p-4 transition-all",
-											selectedTasks.has(index)
-												? "border-primary shadow-sm"
-												: "border-border/50"
-										)}
-										onClick={() => toggleTaskSelection(index)}
-									>
-										<div className="flex items-start justify-between gap-4">
-											<div className="flex-1 space-y-3">
-												<div>
-													<h4 className="text-sm font-medium">
-														{suggestion.title}
-													</h4>
-													<p className="text-muted-foreground mt-1 text-sm">
-														{suggestion.description}
-													</p>
+								{isLoading ? (
+									<>
+										{Array.from({ length: 3 }).map((_, index) => (
+											<Card key={index} className="p-4">
+												<div className="flex items-start justify-between gap-4">
+													<div className="flex-1 space-y-3">
+														<div>
+															<Skeleton className="h-4 w-3/4" />
+															<Skeleton className="mt-2 h-3 w-full" />
+														</div>
+														<div className="flex items-center gap-3">
+															<Skeleton className="h-5 w-24" />
+														</div>
+														<div className="mt-4 space-y-3 border-l-2 pl-4">
+															<Skeleton className="h-3 w-16" />
+															<div className="space-y-3">
+																{Array.from({ length: 2 }).map(
+																	(_, subIndex) => (
+																		<div key={subIndex} className="space-y-1">
+																			<Skeleton className="h-3 w-2/3" />
+																			<Skeleton className="h-2 w-full" />
+																			<Skeleton className="h-4 w-20" />
+																		</div>
+																	)
+																)}
+															</div>
+														</div>
+													</div>
 												</div>
-												<div className="flex items-center gap-3">
-													<span
-														className={cn(
-															"rounded-full px-2 py-1 text-xs font-medium",
-															suggestion.complexity === "Easy"
-																? "bg-emerald-500/10 text-emerald-600"
-																: suggestion.complexity === "Medium"
-																	? "bg-amber-500/10 text-amber-600"
-																	: "bg-rose-500/10 text-rose-600"
-														)}
-													>
-														Complexity: {suggestion.complexity}
-													</span>
+											</Card>
+										))}
+									</>
+								) : (
+									<>
+										{suggestions.map((suggestion, index) => (
+											<Card
+												key={index}
+												className={cn(
+													"group cursor-pointer border p-4 transition-all hover:shadow-md",
+													selectedTasks.has(index)
+														? "border-primary bg-primary/5"
+														: "hover:border-primary/50"
+												)}
+												onClick={() => toggleTaskSelection(index)}
+											>
+												<div className="flex items-start justify-between gap-4">
+													<div className="flex-1 space-y-4">
+														<div className="flex items-start justify-between">
+															<div>
+																<h4 className="font-medium">
+																	{suggestion.title}
+																</h4>
+																<p className="text-muted-foreground mt-1.5 text-sm">
+																	{suggestion.description}
+																</p>
+															</div>
+															<div className="flex items-center gap-2">
+																<span
+																	className={cn(
+																		"rounded-full px-2.5 py-1 text-xs font-medium",
+																		suggestion.complexity === "Easy"
+																			? "bg-emerald-500/10 text-emerald-600"
+																			: suggestion.complexity === "Medium"
+																				? "bg-amber-500/10 text-amber-600"
+																				: "bg-rose-500/10 text-rose-600"
+																	)}
+																>
+																	{suggestion.complexity}
+																</span>
+																{selectedTasks.has(index) ? (
+																	<div className="bg-primary/10 rounded-full p-1">
+																		<Check className="text-primary h-4 w-4" />
+																	</div>
+																) : (
+																	<></>
+																)}
+															</div>
+														</div>
+
+														{suggestion.subtasks &&
+															suggestion.subtasks.length > 0 && (
+																<div className="bg-muted/40 space-y-3 rounded-lg p-3">
+																	<h5 className="text-muted-foreground flex items-center gap-2 text-xs font-medium">
+																		<ChevronRight className="h-3 w-3" />
+																		Subtasks
+																	</h5>
+																	<div className="space-y-3">
+																		{suggestion.subtasks.map(
+																			(subtask, subtaskIndex) => (
+																				<div
+																					key={subtaskIndex}
+																					className="space-y-1.5"
+																				>
+																					<div className="flex items-start justify-between gap-2">
+																						<div>
+																							<h6 className="text-sm font-medium">
+																								{subtask.title}
+																							</h6>
+																							<p className="text-muted-foreground text-xs">
+																								{subtask.description}
+																							</p>
+																						</div>
+																						<span
+																							className={cn(
+																								"shrink-0 rounded-full px-2 py-0.5 text-xs font-medium",
+																								subtask.complexity === "Easy"
+																									? "bg-emerald-500/10 text-emerald-600"
+																									: subtask.complexity ===
+																										  "Medium"
+																										? "bg-amber-500/10 text-amber-600"
+																										: "bg-rose-500/10 text-rose-600"
+																							)}
+																						>
+																							{subtask.complexity}
+																						</span>
+																					</div>
+																				</div>
+																			)
+																		)}
+																	</div>
+																</div>
+															)}
+													</div>
 												</div>
-											</div>
-											{selectedTasks.has(index) && (
-												<Check className="text-primary h-5 w-5 shrink-0" />
-											)}
-										</div>
-									</Card>
-								))}
+											</Card>
+										))}
+									</>
+								)}
 							</div>
 						)}
 					</div>
@@ -329,7 +440,9 @@ export default function AddTaskDialog({
 												onClick={handleAiPlan}
 												loading={isLoading}
 											>
-												{isLoading ? "Planning..." : "Plan with AI"}
+												{isLoading
+													? "Generating suggestions..."
+													: "Plan with AI"}
 											</GlowButton>
 										</TooltipTrigger>
 										<TooltipContent>
@@ -356,9 +469,7 @@ export default function AddTaskDialog({
 										loading={isLoading}
 									>
 										{isLoading
-											? isAiMode
-												? "Planning..."
-												: "Creating..."
+											? "Adding tasks..."
 											: `Add ${selectedTasks.size} Task${selectedTasks.size === 1 ? "" : "s"}`}
 									</GlowButton>
 								</>
