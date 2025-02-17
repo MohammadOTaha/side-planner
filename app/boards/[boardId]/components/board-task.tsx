@@ -9,6 +9,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { ArrowDown, ArrowRight, ArrowUp, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { format } from "timeago.js";
 
 function TaskMetadata({
@@ -114,9 +115,11 @@ export default function BoardTask({
 		try {
 			setIsDeleting(true);
 			await deleteTaskAction(parseInt(task.id), task.boardId);
+			toast.success("Task deleted successfully");
 			onRemoved?.();
 		} catch (error) {
 			console.error("Failed to delete task:", error);
+			toast.error("Failed to delete task. Please try again.");
 		} finally {
 			setIsDeleting(false);
 		}
