@@ -25,6 +25,12 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { type Task } from "@/lib/db/schema";
 import {
 	type AddTaskDialogProps,
@@ -287,52 +293,66 @@ export default function AddTaskDialog({
 						)}
 					</div>
 					<DialogFooter className="gap-2">
-						{!isAiMode ? (
-							<>
-								<Button
-									type="submit"
-									disabled={!title.trim() || isLoading}
-									variant="outline"
-								>
-									{isLoading ? "Creating..." : "Create Task"}
-								</Button>
-								<GlowButton
-									type="button"
-									disabled={!title.trim() || isLoading}
-									onClick={handleAiPlan}
-									loading={isLoading}
-								>
-									{isLoading ? "Planning..." : "Plan with AI"}
-								</GlowButton>
-							</>
-						) : (
-							<>
-								<Button
-									type="button"
-									variant="outline"
-									onClick={() => {
-										setIsAiMode(false);
-										setSuggestions([]);
-										setSelectedTasks(new Set());
-									}}
-								>
-									Back
-								</Button>
-								<GlowButton
-									type="submit"
-									disabled={selectedTasks.size === 0 || isLoading}
-									loading={isLoading}
-								>
-									{isLoading
-										? isAiMode
-											? "Planning..."
-											: "Creating..."
-										: `Add ${selectedTasks.size} Task${
-												selectedTasks.size === 1 ? "" : "s"
-											}`}
-								</GlowButton>
-							</>
-						)}
+						<TooltipProvider>
+							{!isAiMode ? (
+								<>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<Button
+												type="submit"
+												disabled={!title.trim() || isLoading}
+												variant="outline"
+											>
+												{isLoading ? "Creating..." : "Create Task"}
+											</Button>
+										</TooltipTrigger>
+										<TooltipContent>
+											Create a new task with provided details
+										</TooltipContent>
+									</Tooltip>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<GlowButton
+												type="button"
+												disabled={!title.trim() || isLoading}
+												onClick={handleAiPlan}
+												loading={isLoading}
+											>
+												{isLoading ? "Planning..." : "Plan with AI"}
+											</GlowButton>
+										</TooltipTrigger>
+										<TooltipContent>
+											Generate task suggestions using AI
+										</TooltipContent>
+									</Tooltip>
+								</>
+							) : (
+								<>
+									<Button
+										type="button"
+										variant="outline"
+										onClick={() => {
+											setIsAiMode(false);
+											setSuggestions([]);
+											setSelectedTasks(new Set());
+										}}
+									>
+										Back
+									</Button>
+									<GlowButton
+										type="submit"
+										disabled={selectedTasks.size === 0 || isLoading}
+										loading={isLoading}
+									>
+										{isLoading
+											? isAiMode
+												? "Planning..."
+												: "Creating..."
+											: `Add ${selectedTasks.size} Task${selectedTasks.size === 1 ? "" : "s"}`}
+									</GlowButton>
+								</>
+							)}
+						</TooltipProvider>
 					</DialogFooter>
 				</form>
 			</DialogContent>
