@@ -41,6 +41,7 @@ export const tasks = pgTable("tasks", {
 		.notNull()
 		.references(() => boards.id),
 	parentId: integer("parent_id").references((): AnyPgColumn => tasks.id),
+	position: integer("position").notNull().default(0),
 	dueDate: timestamp("due_date"),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),

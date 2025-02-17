@@ -15,23 +15,18 @@ import {
 	FolderIcon,
 	TagIcon,
 } from "@heroicons/react/24/outline";
-import { useCallback, useEffect, useState } from "react";
 import DraggableTask from "./board-task";
 
 export default function BoardColumn({ column }: BoardColumnProps) {
 	const { setNodeRef, isOver } = useDroppable({
 		id: column.id,
+		data: {
+			type: "column",
+			column,
+		},
 	});
+
 	const isBacklog = column.id === "backlog";
-	const [localTasks, setLocalTasks] = useState(column.tasks);
-
-	useEffect(() => {
-		setLocalTasks(column.tasks);
-	}, [column.tasks]);
-
-	const handleTaskRemoved = useCallback((taskId: string) => {
-		setLocalTasks((prev) => prev.filter((task) => task.id !== taskId));
-	}, []);
 
 	const getColumnIcon = (id: string) => {
 		switch (id) {
@@ -70,7 +65,7 @@ export default function BoardColumn({ column }: BoardColumnProps) {
 								: "bg-muted/60 text-muted-foreground"
 						)}
 					>
-						{localTasks.length}
+						{column.tasks.length}
 					</span>
 				</CardTitle>
 			</CardHeader>
@@ -83,15 +78,17 @@ export default function BoardColumn({ column }: BoardColumnProps) {
 				)}
 			>
 				<SortableContext
-					items={localTasks.map((task) => task.id)}
+					items={column.tasks.map((task) => task.id)}
 					strategy={verticalListSortingStrategy}
 				>
-					<div className="flex flex-col gap-3">
-						{localTasks.map((task) => (
+					<div className="sortable-task-container flex flex-col gap-3">
+						{column.tasks.map((task) => (
 							<DraggableTask
 								key={task.id}
 								task={task}
-								onRemoved={handleTaskRemoved}
+								onRemoved={() => {
+									column.tasks = column.tasks.filter((t) => t.id !== task.id);
+								}}
 							/>
 						))}
 					</div>

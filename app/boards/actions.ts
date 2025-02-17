@@ -70,14 +70,15 @@ export async function createTaskAction(data: NewTask) {
 export async function updateTaskStatusAction(
 	taskId: number,
 	boardId: number,
-	status: string
+	status: string,
+	position: number
 ) {
 	const user = await getUser();
 	if (!user) {
 		throw new Error("Not authenticated");
 	}
 
-	await updateTaskStatus(taskId, boardId, status);
+	await updateTaskStatus(taskId, boardId, status, position);
 	revalidatePath(`/boards/${boardId}`);
 }
 

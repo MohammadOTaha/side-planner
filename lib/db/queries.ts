@@ -107,13 +107,15 @@ export async function getTask(taskId: number, boardId: number) {
 }
 
 export async function getBoardTasks(boardId: number) {
-	return await db.query.tasks.findMany({
+	const result = await db.query.tasks.findMany({
 		where: and(eq(tasks.boardId, boardId), isNull(tasks.deletedAt)),
-		orderBy: desc(tasks.updatedAt),
+		orderBy: [tasks.position, desc(tasks.createdAt)],
 		with: {
 			parent: true,
 		},
 	});
+
+	return result;
 }
 
 export async function updateTask(
@@ -140,13 +142,41 @@ export async function deleteTask(taskId: number, boardId: number) {
 export async function updateTaskStatus(
 	taskId: number,
 	boardId: number,
-	status: string
+	status: string,
+	position: number
 ) {
+	// First, get all tasks in the target status to update their positions
+	const tasksInStatus = await db
+		.select()
+		.from(tasks)
+		.where(
+			and(
+				eq(tasks.boardId, boardId),
+				eq(tasks.status, status),
+				isNull(tasks.deletedAt)
+			)
+		)
+		.orderBy(tasks.position);
+
+	// Update positions of existing tasks to make space for the new task
+	for (let i = tasksInStatus.length - 1; i >= position; i--) {
+		await db
+			.update(tasks)
+			.set({ position: i + 1, updatedAt: new Date() })
+			.where(eq(tasks.id, tasksInStatus[i].id));
+	}
+
+	// Update the task's status and position
 	const [task] = await db
 		.update(tasks)
-		.set({ status, updatedAt: new Date() })
+		.set({
+			status,
+			position,
+			updatedAt: new Date(),
+		})
 		.where(and(eq(tasks.id, taskId), eq(tasks.boardId, boardId)))
 		.returning();
+
 	return task;
 }
 

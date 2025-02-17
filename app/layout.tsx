@@ -1,8 +1,8 @@
-import "./globals.css";
-import type { Metadata, Viewport } from "next";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import { UserProvider } from "@/lib/auth";
 import { getUser } from "@/lib/db/queries";
-import { ThemeProvider } from "@/components/providers/theme-provider";
+import type { Metadata, Viewport } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
 	title: "Next.js SaaS Starter",

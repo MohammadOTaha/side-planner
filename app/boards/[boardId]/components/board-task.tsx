@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { ArrowDown, ArrowRight, ArrowUp, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { format } from "timeago.js";
 
@@ -72,26 +71,6 @@ function TaskMetadata({
 	);
 }
 
-function DeleteButton({
-	isDeleting,
-	onDelete,
-}: {
-	isDeleting: boolean;
-	onDelete: () => void;
-}) {
-	return (
-		<Button
-			variant="ghost"
-			size="icon"
-			className="hover:bg-destructive/90 hover:text-destructive-foreground h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-			onClick={onDelete}
-			disabled={isDeleting}
-		>
-			<Trash2 className="h-4 w-4" />
-		</Button>
-	);
-}
-
 function ParentTaskHeader({ title }: { title: string }) {
 	return (
 		<div className="border-border/40 bg-muted/30 absolute inset-x-0 top-0 rounded-t-md border-b px-3 py-2">
@@ -100,9 +79,12 @@ function ParentTaskHeader({ title }: { title: string }) {
 	);
 }
 
-export default function BoardTask({ task, onRemoved }: BoardTaskProps) {
+export default function BoardTask({
+	task,
+	onRemoved,
+}: BoardTaskProps & { onRemoved?: () => void }) {
 	const [isDeleting, setIsDeleting] = useState(false);
-	const router = useRouter();
+
 	const {
 		attributes,
 		listeners,
@@ -112,6 +94,10 @@ export default function BoardTask({ task, onRemoved }: BoardTaskProps) {
 		isDragging,
 	} = useSortable({
 		id: task.id,
+		data: {
+			type: "task",
+			task,
+		},
 	});
 
 	const style = {
@@ -123,7 +109,7 @@ export default function BoardTask({ task, onRemoved }: BoardTaskProps) {
 		try {
 			setIsDeleting(true);
 			await deleteTaskAction(parseInt(task.id), task.boardId);
-			onRemoved(task.id);
+			onRemoved?.();
 		} catch (error) {
 			console.error("Failed to delete task:", error);
 		} finally {
@@ -155,7 +141,15 @@ export default function BoardTask({ task, onRemoved }: BoardTaskProps) {
 					</div>
 
 					<div className="mt-2 flex items-center justify-between gap-2">
-						<DeleteButton isDeleting={isDeleting} onDelete={handleDelete} />
+						<Button
+							variant="ghost"
+							size="icon"
+							className="hover:bg-destructive/90 hover:text-destructive-foreground h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+							onClick={handleDelete}
+							disabled={isDeleting}
+						>
+							<Trash2 className="h-4 w-4" />
+						</Button>
 						<TaskMetadata
 							complexity={task.complexity}
 							priority={task.priority}
