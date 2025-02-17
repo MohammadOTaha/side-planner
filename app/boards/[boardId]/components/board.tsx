@@ -17,9 +17,15 @@ import {
 	MouseSensor,
 	TouchSensor,
 	closestCenter,
+	defaultDropAnimationSideEffects,
 	useSensor,
 	useSensors,
 } from "@dnd-kit/core";
+import {
+	SortableContext,
+	arrayMove,
+	verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { useCallback, useEffect, useState } from "react";
 import AddTaskDialog from "./add-task-dialog";
 import BoardColumn from "./board-column";
@@ -47,6 +53,16 @@ const INITIAL_COLUMNS: Column[] = [
 		tasks: [],
 	},
 ];
+
+const dropAnimation = {
+	sideEffects: defaultDropAnimationSideEffects({
+		styles: {
+			active: {
+				opacity: "0.5",
+			},
+		},
+	}),
+};
 
 export default function Board({ board }: BoardProps) {
 	const [activeTask, setActiveTask] = useState<DraggableTask | null>(null);
@@ -91,6 +107,13 @@ export default function Board({ board }: BoardProps) {
 		})
 	);
 
+	const findContainer = (id: string) => {
+		const container = columns.find((col) =>
+			col.tasks.some((task) => task.id === id)
+		);
+		return container ? container.id : null;
+	};
+
 	const handleDragStart = (event: any) => {
 		const { active } = event;
 		const task = columns
@@ -106,70 +129,67 @@ export default function Board({ board }: BoardProps) {
 		const activeId = active.id;
 		const overId = over.id;
 
-		// Find the containers
-		const activeContainer = columns.find((col) =>
-			col.tasks.some((task) => task.id === activeId)
-		);
-		const overContainer =
-			over.data?.current?.type === "column"
-				? columns.find((col) => col.id === overId)
-				: columns.find((col) => col.tasks.some((task) => task.id === overId));
+		const activeContainerId = findContainer(activeId);
+		const overContainerId =
+			over.data?.current?.type === "column" ? over.id : findContainer(overId);
 
-		if (!activeContainer || !overContainer) return;
+		if (!activeContainerId || !overContainerId) return;
 
-		// If items are in different containers
-		if (activeContainer !== overContainer) {
-			setColumns((prev) => {
-				const activeItems = activeContainer.tasks;
-				const overItems = overContainer.tasks;
+		// If items are in the same container, no need to update columns
+		if (activeContainerId === overContainerId) return;
 
-				// Find the indexes
-				const activeIndex = activeItems.findIndex(
-					(item) => item.id === activeId
-				);
-				const overIndex =
-					over.data?.current?.type === "column"
-						? overItems.length
-						: overItems.findIndex((item) => item.id === overId);
+		setColumns((prev) => {
+			const activeContainer = prev.find((col) => col.id === activeContainerId);
+			const overContainer = prev.find((col) => col.id === overContainerId);
 
-				let newIndex: number;
-				if (over.data?.current?.type === "column") {
-					// We're dropping directly on a column
-					newIndex = overItems.length;
-				} else {
-					const isBelowOverItem =
-						active.rect.current.translated &&
-						active.rect.current.translated.top >
-							over.rect.top + over.rect.height / 2;
+			if (!activeContainer || !overContainer) return prev;
 
-					newIndex = isBelowOverItem ? overIndex + 1 : overIndex;
-				}
+			const activeIndex = activeContainer.tasks.findIndex(
+				(task) => task.id === activeId
+			);
+			const overIndex =
+				over.data?.current?.type === "column"
+					? overContainer.tasks.length
+					: overContainer.tasks.findIndex((task) => task.id === overId);
 
-				const updatedColumns = prev.map((col) => {
-					if (col.id === activeContainer.id) {
-						return {
-							...col,
-							tasks: col.tasks.filter((item) => item.id !== activeId),
-						};
-					}
-					if (col.id === overContainer.id) {
-						const updatedItems = [...col.tasks];
-						const movingItem = {
-							...activeItems[activeIndex],
-							status: col.id,
-						};
-						updatedItems.splice(newIndex, 0, movingItem);
-						return {
-							...col,
-							tasks: updatedItems,
-						};
-					}
-					return col;
-				});
+			const newIndex =
+				over.data?.current?.type === "column"
+					? overContainer.tasks.length
+					: overIndex;
 
-				return updatedColumns;
+			// Log the position information
+			console.log("Task Position Info:", {
+				taskId: activeId,
+				fromColumn: activeContainerId,
+				toColumn: overContainerId,
+				fromIndex: activeIndex,
+				toIndex: newIndex,
+				totalTasksInColumn: overContainer.tasks.length,
+				isDirectlyOverColumn: over.data?.current?.type === "column",
 			});
-		}
+
+			return prev.map((col) => {
+				if (col.id === activeContainerId) {
+					return {
+						...col,
+						tasks: col.tasks.filter((task) => task.id !== activeId),
+					};
+				}
+				if (col.id === overContainerId) {
+					const updatedTasks = [...col.tasks];
+					const movingTask = {
+						...activeContainer.tasks[activeIndex],
+						status: col.id,
+					};
+					updatedTasks.splice(newIndex, 0, movingTask);
+					return {
+						...col,
+						tasks: updatedTasks,
+					};
+				}
+				return col;
+			});
+		});
 	};
 
 	const handleDragEnd = async (event: any) => {
@@ -182,13 +202,17 @@ export default function Board({ board }: BoardProps) {
 		const activeId = active.id;
 		const overId = over.id;
 
-		const activeContainer = columns.find((col) =>
-			col.tasks.some((task) => task.id === activeId)
-		);
-		const overContainer =
-			over.data?.current?.type === "column"
-				? columns.find((col) => col.id === overId)
-				: columns.find((col) => col.tasks.some((task) => task.id === overId));
+		const activeContainerId = findContainer(activeId);
+		const overContainerId =
+			over.data?.current?.type === "column" ? over.id : findContainer(overId);
+
+		if (!activeContainerId || !overContainerId) {
+			setActiveTask(null);
+			return;
+		}
+
+		const activeContainer = columns.find((col) => col.id === activeContainerId);
+		const overContainer = columns.find((col) => col.id === overContainerId);
 
 		if (!activeContainer || !overContainer) {
 			setActiveTask(null);
@@ -196,37 +220,38 @@ export default function Board({ board }: BoardProps) {
 		}
 
 		const activeIndex = activeContainer.tasks.findIndex(
-			(item) => item.id === activeId
+			(task) => task.id === activeId
 		);
 		const overIndex =
 			over.data?.current?.type === "column"
 				? overContainer.tasks.length
-				: overContainer.tasks.findIndex((item) => item.id === overId);
+				: overContainer.tasks.findIndex((task) => task.id === overId);
 
-		let newIndex: number;
-		if (over.data?.current?.type === "column") {
-			newIndex = overContainer.tasks.length;
-		} else {
-			const isBelowOverItem =
-				active.rect.current.translated &&
-				active.rect.current.translated.top >
-					over.rect.top + over.rect.height / 2;
-
-			newIndex = isBelowOverItem ? overIndex + 1 : overIndex;
-		}
-
-		// If in the same container and position hasn't changed
-		if (activeContainer === overContainer && activeIndex === newIndex) {
-			setActiveTask(null);
-			return;
-		}
+		const newIndex =
+			over.data?.current?.type === "column"
+				? overContainer.tasks.length
+				: overIndex;
 
 		try {
 			const activeTask = activeContainer.tasks[activeIndex];
+
+			// If in the same container, handle reordering
+			if (activeContainerId === overContainerId) {
+				setColumns((prev) => {
+					return prev.map((col) => {
+						if (col.id === activeContainerId) {
+							const updatedTasks = arrayMove(col.tasks, activeIndex, newIndex);
+							return { ...col, tasks: updatedTasks };
+						}
+						return col;
+					});
+				});
+			}
+
 			await updateTaskStatusAction(
 				parseInt(activeTask.id),
 				board.id,
-				overContainer.id,
+				overContainerId,
 				newIndex
 			);
 		} catch (error) {
@@ -273,7 +298,12 @@ export default function Board({ board }: BoardProps) {
 				<div className="flex h-[calc(100vh-12rem)] gap-6 overflow-hidden">
 					{/* Backlog Column */}
 					<div className="w-80 overflow-y-auto">
-						<BoardColumn column={columns[0]} />
+						<SortableContext
+							items={columns[0].tasks.map((task) => task.id)}
+							strategy={verticalListSortingStrategy}
+						>
+							<BoardColumn column={columns[0]} />
+						</SortableContext>
 					</div>
 
 					{/* Vertical Separator */}
@@ -283,13 +313,18 @@ export default function Board({ board }: BoardProps) {
 					<div className="grid flex-1 grid-cols-3 gap-6 overflow-x-auto">
 						{columns.slice(1).map((column) => (
 							<div key={column.id} className="overflow-y-auto">
-								<BoardColumn column={column} />
+								<SortableContext
+									items={column.tasks.map((task) => task.id)}
+									strategy={verticalListSortingStrategy}
+								>
+									<BoardColumn column={column} />
+								</SortableContext>
 							</div>
 						))}
 					</div>
 				</div>
 
-				<DragOverlay>
+				<DragOverlay dropAnimation={dropAnimation}>
 					{activeTask && (
 						<Card className="bg-background/60 border-border/50 w-[300px] scale-105 border p-4 shadow-2xl backdrop-blur-sm">
 							<p>{activeTask.title}</p>
