@@ -65,21 +65,18 @@ export default function BoardsComponent({ initialBoards }: Props) {
 				{boards.map((board) => (
 					<Card
 						key={board.id}
-						className="group from-background to-muted/30 relative overflow-hidden border-none bg-gradient-to-br shadow-md transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
+						className="group relative overflow-hidden border bg-card hover:bg-accent/5 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
 					>
 						<Link href={`/boards/${board.id}`} className="block h-full">
-							<CardHeader className="flex h-full items-center justify-center p-6">
-								<CardTitle className="flex flex-col items-center gap-4 text-xl">
-									<div className="bg-primary/10 rounded-md p-3">
-										<Layout className="text-primary h-6 w-6" />
-									</div>
-									<span>{board.name}</span>
+							<CardHeader className="flex h-full items-center justify-center p-8">
+								<CardTitle className="text-xl font-medium">
+									{board.name}
 								</CardTitle>
 							</CardHeader>
 						</Link>
 
-						<CardContent className="absolute top-4 right-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-							<div className="flex gap-1">
+						<CardContent className="absolute top-3 right-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+							<div className="flex gap-1.5">
 								<BoardDialog
 									mode="edit"
 									board={board}
@@ -93,18 +90,18 @@ export default function BoardsComponent({ initialBoards }: Props) {
 									}}
 									trigger={
 										<Button
-											variant="ghost"
+											variant="secondary"
 											size="icon"
-											className="bg-background/80 h-8 w-8 rounded-full backdrop-blur-sm"
+											className="h-8 w-8 rounded-full"
 										>
 											<Pencil className="h-4 w-4" />
 										</Button>
 									}
 								/>
 								<Button
-									variant="ghost"
+									variant="secondary"
 									size="icon"
-									className="bg-background/80 h-8 w-8 rounded-full backdrop-blur-sm"
+									className="h-8 w-8 rounded-full"
 									onClick={(e) => {
 										e.preventDefault();
 										setDeletingBoard(board);
@@ -117,25 +114,25 @@ export default function BoardsComponent({ initialBoards }: Props) {
 					</Card>
 				))}
 
-				<BoardDialog
-					mode="add"
-					onSubmit={async (name, description, features) => {
-						const board = await createBoardAction({
-							name,
-							description,
-							features,
-						});
-						handleBoardCreated(board);
-					}}
-					trigger={
-						<Card className="group from-background to-muted/30 hover:border-primary/50 flex h-[140px] cursor-pointer items-center justify-center border-2 border-dashed bg-gradient-to-br transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-							<div className="text-muted-foreground group-hover:text-primary flex flex-col items-center gap-3 transition-colors">
+				<Card className="group flex h-[140px] cursor-pointer items-center justify-center border-2 border-dashed hover:border-primary/50 hover:bg-accent/5 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+					<BoardDialog
+						mode="add"
+						onSubmit={async (name, description, features) => {
+							const board = await createBoardAction({
+								name,
+								description,
+								features,
+							});
+							handleBoardCreated(board);
+						}}
+						trigger={
+							<div className="flex flex-col items-center gap-3 text-muted-foreground group-hover:text-primary transition-colors">
 								<Plus className="h-6 w-6" />
 								<p className="text-sm font-medium">Create New Board</p>
 							</div>
-						</Card>
-					}
-				/>
+						}
+					/>
+				</Card>
 			</div>
 
 			{/* Delete dialog */}
