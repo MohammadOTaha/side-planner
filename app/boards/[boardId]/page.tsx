@@ -5,9 +5,7 @@ import { Suspense } from "react";
 import Board from "./components/board";
 
 interface Props {
-	params: {
-		boardId: string;
-	};
+	params: Promise<{ boardId: string }>;
 }
 
 export default async function BoardPage({ params }: Props) {
@@ -16,7 +14,7 @@ export default async function BoardPage({ params }: Props) {
 		redirect("/login");
 	}
 
-	const { boardId } = await params;
+	const boardId = (await params).boardId;
 
 	const board = await getBoard(parseInt(boardId), user.id);
 	if (!board) {

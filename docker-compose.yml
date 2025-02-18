@@ -1,15 +1,49 @@
 services:
+  app:
+    build:
+      context: .
+      target: runner
+    container_name: sideplanner_nextjs
+    restart: always
+    env_file: .env
+    environment:
+      - NODE_ENV=production
+      - POSTGRES_URL=${POSTGRES_URL}
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3000/api/healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   db:
     image: postgres:16.4-alpine
     container_name: sideplanner_postgres
+    restart: always
+    env_file: .env
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "54322:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
+    name: sideplanner_postgres_data
+
+networks:
+  default:
+    name: sideplanner_network
+    driver: bridge
