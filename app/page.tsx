@@ -42,13 +42,13 @@ export default function LandingPage() {
 					<div className="relative flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:gap-12">
 						{/* Left Side - Content */}
 						<div className="flex flex-1 flex-col items-center text-center lg:items-start lg:text-left">
-							<h1 className="text-foreground/90 text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
+							<h1 className="text-foreground/70 text-5xl font-medium tracking-tight sm:text-6xl lg:text-7xl">
 								Welcome to{" "}
 								<span className="text-foreground font-black">SidePlanner</span>
 							</h1>
 							<p className="text-muted-foreground mt-6 max-w-xl text-lg sm:text-xl">
-								Your AI-powered personal project management solution. Organize,
-								track, and accomplish your goals with ease.
+								Your side projects planned with AI.
+								<br />
 							</p>
 							<div className="mt-8 flex flex-col items-center gap-4 sm:flex-row">
 								<Link href="/boards">
