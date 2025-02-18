@@ -1,13 +1,15 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 import { signToken, verifyToken } from "@/lib/auth/session";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-const protectedRoutes = "/dashboard";
+const protectedRoutes = ["/dashboard", "/boards"];
 
 export async function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 	const sessionCookie = request.cookies.get("session");
-	const isProtectedRoute = pathname.startsWith(protectedRoutes);
+	const isProtectedRoute = protectedRoutes.some((route) =>
+		pathname.startsWith(route)
+	);
 
 	if (isProtectedRoute && !sessionCookie) {
 		return NextResponse.redirect(new URL("/sign-in", request.url));

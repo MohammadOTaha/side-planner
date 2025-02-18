@@ -11,7 +11,7 @@ interface Props {
 export default async function BoardPage({ params }: Props) {
 	const user = await getUser();
 	if (!user) {
-		redirect("/login");
+		redirect("/sign-in");
 	}
 
 	const boardId = (await params).boardId;
