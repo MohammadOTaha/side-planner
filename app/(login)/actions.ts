@@ -54,7 +54,7 @@ export const signIn = validatedAction(signInSchema, async (data, formData) => {
 
 	await Promise.all([setSession(foundUser)]);
 
-	redirect("/dashboard");
+	redirect("/boards");
 });
 
 const signUpSchema = z.object({
@@ -98,7 +98,7 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
 	}
 
 	await Promise.all([setSession(createdUser)]);
-	redirect("/dashboard");
+	redirect("/boards");
 });
 
 export async function signOut() {
