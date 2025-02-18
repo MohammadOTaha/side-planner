@@ -44,6 +44,7 @@ export default function AddTaskDialog({
 		new Set()
 	);
 	const [priority, setPriority] = useState("medium");
+	const [lastTaskTitle, setLastTaskTitle] = useState("");
 
 	const handleRegularSubmit = async (data: RegularTaskData) => {
 		try {
@@ -68,6 +69,7 @@ export default function AddTaskDialog({
 	const handleAIPlan = async (title: string) => {
 		setIsLoading(true);
 		setIsAiMode(true);
+		setLastTaskTitle(title);
 		try {
 			const suggestions = await getAITaskSuggestionsAction(
 				board.name,
@@ -306,7 +308,7 @@ export default function AddTaskDialog({
 											type="button"
 											variant="outline"
 											size="icon"
-											onClick={() => handleAIPlan("")}
+											onClick={() => handleAIPlan(lastTaskTitle)}
 											disabled={isLoading}
 											className="h-9 w-9"
 										>
