@@ -1,4 +1,4 @@
-# [SidePlanner.com](side-planner.com)
+# [Side-Planner.com](https://side-planner.com)
 
 
 
