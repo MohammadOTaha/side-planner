@@ -1,4 +1,6 @@
-# SidePlanner
+# [SidePlanner.com](side-planner.com)
+
+
 
 ![SidePlanner](public/SidePlanner-bow.png)
 
